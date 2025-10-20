@@ -17,6 +17,9 @@ export const productHatData: (args: ProductArgs) => RequiredDataFromCollectionSl
   categories,
 }) => {
   return {
+    enableVariants: true,
+    variantTypes: variantTypes,
+    inventory: 0,
     meta: {
       title: 'Hat | Payload Ecommerce Template',
       image: metaImage,

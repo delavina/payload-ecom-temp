@@ -22,6 +22,12 @@ This template is right for you if you are looking for an ecommerce project or sh
   - [x] Has proper TypeScript support for EUR fields
   - [x] Builds successfully without errors
   - [x] Note: Ensure all prices are set in EUR in the admin panel for each product/variant
+- [x] Adapted the seeding script
+  - [x] Changed all USD prices to EUR
+  - [x] product-hat.ts
+    - [x] enableVariants: true added
+    - [x] variantTypes: variantTypes added (passed but not used)
+    - [x] inventory: 0 added (same as for the T-shirt)
 
 ### To Do 📋
 - [ ] Add polar.sh as payment option
