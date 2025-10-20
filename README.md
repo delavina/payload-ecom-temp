@@ -1,62 +1,30 @@
 # Payload Ecommerce Template
 
-This template is in **BETA**.
+This original template is in **BETA**.
+(https://github.com/payloadcms/payload/blob/main/templates/ecommerce). 
 
-This is the official [Payload Ecommerce Template](https://github.com/payloadcms/payload/blob/main/templates/ecommerce). This repo includes a fully-working backend, enterprise-grade admin panel, and a beautifully designed, production-ready ecommerce website.
+This repo is an adaptation of the original template using bun as the default package manager and includes a fully-working backend, enterprise-grade admin panel, and a beautifully designed, production-ready ecommerce website.
 
-This template is right for you if you are working on building an ecommerce project or shop with Payload.
+This template is right for you if you are looking for an ecommerce project or shop with Payload using Euros as the default currency.
 
-Core features:
+### Planed Changes:
 
-- [Pre-configured Payload Config](#how-it-works)
-- [Authentication](#users-authentication)
-- [Access Control](#access-control)
-- [Layout Builder](#layout-builder)
-- [Draft Preview](#draft-preview)
-- [Live Preview](#live-preview)
-- [On-demand Revalidation](#on-demand-revalidation)
-- [SEO](#seo)
-- [Search & Filters](#search)
-- [Jobs and Scheduled Publishing](#jobs-and-scheduled-publish)
-- [Website](#website)
-- [Products & Variants](#products-and-variants)
-- [User accounts](#user-accounts)
-- [Carts](#carts)
-- [Guest checkout](#guests)
-- [Orders & Transactions](#orders-and-transactions)
-- [Stripe Payments](#stripe)
-- [Currencies](#currencies)
-- [Automated Tests](#tests)
-
-## Quick Start
-
-To spin up this example locally, follow these steps:
-
-### Clone
-
-If you have not done so already, you need to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
-
-#### Method 1
-
-Use the `create-payload-app` CLI to clone this template directly to your machine:
-
-```bash
-pnpx create-payload-app my-project -t ecommerce
-```
-
-#### Method 2
-
-Use the `git` CLI to clone this template directly to your machine:
-
-```bash
-git clone -n --depth=1 --filter=tree:0 https://github.com/payloadcms/payload my-project && cd my-project && git sparse-checkout set --no-cone templates/ecommerce && git checkout && rm -rf .git && git init && git add . && git mv -f templates/ecommerce/{.,}* . && git add . && git commit -m "Initial commit"
-```
+- [x] Changed package manager to bun
+- [ ] Change root layout to avoid hydration errors
+  - Remove the <head> element - Next.js takes care of it
+  - Move <InitTheme /> to <body> - prevents hydration errors
+  - Move favicon links to metadata - correctly uses the Next.js Metadata API
+  - Add the Icons property to metadata - structured and type-safe
+- [ ] Change default currency to Euros
+- [ ] Add polar.sh as payment options
+- [ ] Add brevo as email provider
+- [ ] ...
 
 ### Development
 
 1. First [clone the repo](#clone) if you have not done so already
 1. `cd my-project && cp .env.example .env` to copy the example environment variables
-1. `pnpm install && pnpm dev` to install dependencies and start the dev server
+1. `bun install && bun dev` to install dependencies and start the dev server
 1. open `http://localhost:3000` to open the app in your browser
 
 That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
