@@ -1,5 +1,5 @@
+import { expect, Page, test } from '@playwright/test'
 import path from 'path'
-import { test, expect, Page } from '@playwright/test'
 import { fileURLToPath } from 'url'
 
 const filename = fileURLToPath(import.meta.url)
@@ -122,7 +122,7 @@ test.describe('Frontend', () => {
 
     const priceSort = page.getByText('Price: Low to high')
     await priceSort.click()
-    await expect(page).toHaveURL(/\/search\?sort=priceInUSD/)
+    await expect(page).toHaveURL(/\/search\?sort=priceInEUR/)
 
     await expect(title).toHaveText('Hoodie')
   })
@@ -463,8 +463,8 @@ test.describe('Frontend', () => {
         _status: 'published',
         layout: [],
         gallery: [imageID],
-        priceInUSDEnabled: true,
-        priceInUSD: 1000,
+        priceInEUREnabled: true,
+        priceInEUR: 1000,
       },
     })
 
@@ -475,8 +475,8 @@ test.describe('Frontend', () => {
         product: productID,
         variantType: variantTypeID,
         options: [payloadVariantID],
-        priceInUSDEnabled: true,
-        priceInUSD: 1000,
+        priceInEUREnabled: true,
+        priceInEUR: 1000,
         inventory: 50,
         _status: 'published',
       },
@@ -487,8 +487,8 @@ test.describe('Frontend', () => {
         product: productID,
         variantType: variantTypeID,
         options: [figmaVariantID],
-        priceInUSDEnabled: true,
-        priceInUSD: 1000,
+        priceInEUREnabled: true,
+        priceInEUR: 1000,
         inventory: 50,
         _status: 'published',
       },
@@ -502,8 +502,8 @@ test.describe('Frontend', () => {
         _status: 'published',
         layout: [],
         gallery: [imageID],
-        priceInUSDEnabled: true,
-        priceInUSD: 1000,
+        priceInEUREnabled: true,
+        priceInEUR: 1000,
       },
     })
 
@@ -515,8 +515,8 @@ test.describe('Frontend', () => {
         _status: 'published',
         layout: [],
         gallery: [imageID],
-        priceInUSDEnabled: true,
-        priceInUSD: 1000,
+        priceInEUREnabled: true,
+        priceInEUR: 1000,
       },
     })
   }

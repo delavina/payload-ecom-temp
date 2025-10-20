@@ -7,18 +7,26 @@ This repo is an adaptation of the original template using bun as the default pac
 
 This template is right for you if you are looking for an ecommerce project or shop with Payload using Euros as the default currency.
 
-### Planed Changes:
+### Changes:
 
+### done:
 - [x] Changed package manager to bun
-- [ ] Change root layout to avoid hydration errors
-  - Remove the <head> element - Next.js takes care of it
-  - Move <InitTheme /> to <body> - prevents hydration errors
-  - Move favicon links to metadata - correctly uses the Next.js Metadata API
-  - Add the Icons property to metadata - structured and type-safe
-- [ ] Change default currency to Euros
-- [ ] Add polar.sh as payment options
+- [x] Change root layout to avoid hydration errors
+  - ✅ Removed the <head> element - Next.js takes care of it
+  - ✅ Moved <InitTheme /> to <body> - prevents hydration errors
+  - ✅ Moved favicon links to metadata - correctly uses the Next.js Metadata API
+  - ✅ Added the Icons property to metadata - structured and type-safe
+- [x] Change default currency to Euros
+  - ✅ Displays all prices in EUR (€)
+  - ✅ Has proper TypeScript support for EUR fields
+  - ✅ Builds successfully without errors
+    (ensure all prices are set in EUR: therefore Enable EUR price in admin panel for each product/variant)
+
+### to do:
+- [ ] Add polar.sh as payment option
 - [ ] Add brevo as email provider
 - [ ] ...
+
 
 ### Development
 

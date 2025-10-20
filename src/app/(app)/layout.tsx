@@ -26,7 +26,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     <html
       className={`${GeistSans.variable} ${GeistMono.variable}`}
       lang="en"
-      suppressHydrationWarning
+      suppressHydrationWarning = {true}
     >
       <body>
         <InitTheme />

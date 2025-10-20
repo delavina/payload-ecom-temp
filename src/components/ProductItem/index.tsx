@@ -1,14 +1,11 @@
 import { Media } from '@/components/Media'
-import { OrderStatus } from '@/components/OrderStatus'
 import { Price } from '@/components/Price'
-import { Button } from '@/components/ui/button'
-import { Media as MediaType, Order, Product, Variant } from '@/payload-types'
-import { formatDateTime } from '@/utilities/formatDateTime'
+import { Product, Variant } from '@/payload-types'
 import Link from 'next/link'
 
 type Props = {
   product: Product
-  style?: 'compact' | 'default'
+  // style?: 'compact' | 'default' // non used vars
   variant?: Variant
   quantity?: number
   /**
@@ -19,7 +16,7 @@ type Props = {
 
 export const ProductItem: React.FC<Props> = ({
   product,
-  style = 'default',
+  // style = 'default',  // non used var
   quantity,
   variant,
   currencyCode,
@@ -55,7 +52,7 @@ export const ProductItem: React.FC<Props> = ({
     }
   }
 
-  const itemPrice = variant?.priceInUSD || product.priceInUSD
+  const itemPrice = variant?.priceInEUR || product.priceInEUR
   const itemURL = `/products/${product.slug}${variant ? `?variant=${variant.id}` : ''}`
 
   return (

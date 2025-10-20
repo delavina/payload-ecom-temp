@@ -1,6 +1,6 @@
 'use client'
 import { useCurrency } from '@payloadcms/plugin-ecommerce/client/react'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 
 type BaseProps = {
   className?: string
@@ -32,7 +32,15 @@ export const Price = ({
   currencyCode: currencyCodeFromProps,
   as = 'p',
 }: Props & React.ComponentProps<'p'>) => {
-  const { formatCurrency, supportedCurrencies } = useCurrency()
+   const { formatCurrency: originalFormatCurrency, supportedCurrencies } = useCurrency()
+
+  // Custom formatCurrency that adds space between symbol and amount
+  const formatCurrency = useCallback(
+    (value: number, options?: Parameters<typeof originalFormatCurrency>[1]) => {
+  const formatted = originalFormatCurrency(value, options)
+  // Add space between currency symbol and amount if not already present
+  return formatted.replace(/([€$£CHF])(\d)/, '$1\u2009$2')
+  }, [originalFormatCurrency])
 
   const Element = as
 
