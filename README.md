@@ -28,10 +28,11 @@ This template is right for you if you are looking for an ecommerce project or sh
     - [x] enableVariants: true added
     - [x] variantTypes: variantTypes added (passed but not used)
     - [x] inventory: 0 added (same as for the T-shirt)
+- [x] Add brevo as email provider
 
 ### To Do 📋
 - [ ] Add polar.sh as payment option
-- [ ] Add brevo as email provider
+- [ ] Add uploadthing as media storage
 - [ ] ...
 
 

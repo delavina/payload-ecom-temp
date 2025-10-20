@@ -22,6 +22,7 @@ import { Pages } from '@/collections/Pages'
 import { Users } from '@/collections/Users'
 import { Footer } from '@/globals/Footer'
 import { Header } from '@/globals/Header'
+import { brevoAdapter } from './lib/brevo-adapter'
 import { plugins } from './plugins'
 
 const filename = fileURLToPath(import.meta.url)
@@ -39,6 +40,14 @@ export default buildConfig({
     },
     user: Users.slug,
   },
+  email: brevoAdapter({
+    apiKey: process.env.BREVO_API_KEY!,
+    defaultFromAddress: process.env.BREVO_SENDER_EMAIL!,
+    defaultFromName: process.env.BREVO_SENDER_NAME || 'Payload Ecommerce',
+    enabled: process.env.NODE_ENV === 'production' || 
+    process.env.BREVO_ENABLED === 'true',
+ 
+  }), 
   collections: [Users, Pages, Categories, Media],
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
