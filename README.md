@@ -9,20 +9,21 @@ This template is right for you if you are looking for an ecommerce project or sh
 
 ### Changes:
 
-### done:
+### Done ✅
+
 - [x] Changed package manager to bun
 - [x] Change root layout to avoid hydration errors
-  - ✅ Removed the <head> element - Next.js takes care of it
-  - ✅ Moved <InitTheme /> to <body> - prevents hydration errors
-  - ✅ Moved favicon links to metadata - correctly uses the Next.js Metadata API
-  - ✅ Added the Icons property to metadata - structured and type-safe
+  - [x] Removed the `<head>` element - Next.js takes care of it
+  - [x] Moved `<InitTheme />` to `<body>` - prevents hydration errors
+  - [x] Moved favicon links to metadata - correctly uses the Next.js Metadata API
+  - [x] Added the Icons property to metadata - structured and type-safe
 - [x] Change default currency to Euros
-  - ✅ Displays all prices in EUR (€)
-  - ✅ Has proper TypeScript support for EUR fields
-  - ✅ Builds successfully without errors
-    (ensure all prices are set in EUR: therefore Enable EUR price in admin panel for each product/variant)
+  - [x] Displays all prices in EUR (€)
+  - [x] Has proper TypeScript support for EUR fields
+  - [x] Builds successfully without errors
+  - [x] Note: Ensure all prices are set in EUR in the admin panel for each product/variant
 
-### to do:
+### To Do 📋
 - [ ] Add polar.sh as payment option
 - [ ] Add brevo as email provider
 - [ ] ...
