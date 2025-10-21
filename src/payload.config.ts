@@ -40,14 +40,6 @@ export default buildConfig({
     },
     user: Users.slug,
   },
-  email: brevoAdapter({
-    apiKey: process.env.BREVO_API_KEY!,
-    defaultFromAddress: process.env.BREVO_SENDER_EMAIL!,
-    defaultFromName: process.env.BREVO_SENDER_NAME || 'Payload Ecommerce',
-    enabled: process.env.NODE_ENV === 'production' || 
-    process.env.BREVO_ENABLED === 'true',
- 
-  }), 
   collections: [Users, Pages, Categories, Media],
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
@@ -67,7 +59,7 @@ export default buildConfig({
               if ('name' in field && field.name === 'url') return false
               return true
             })
-
+            
             return [
               ...defaultFieldsWithoutUrl,
               {
@@ -88,6 +80,14 @@ export default buildConfig({
     },
   }),
   //email: nodemailerAdapter(),
+  email: brevoAdapter({
+    apiKey: process.env.BREVO_API_KEY!,
+    defaultFromAddress: process.env.BREVO_SENDER_EMAIL!,
+    defaultFromName: process.env.BREVO_SENDER_NAME || 'Payload Ecommerce',
+    enabled: process.env.NODE_ENV === 'production' || 
+    process.env.BREVO_ENABLED === 'true',
+ 
+  }), 
   endpoints: [],
   globals: [Header, Footer],
   plugins: [

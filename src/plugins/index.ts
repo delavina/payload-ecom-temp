@@ -1,4 +1,4 @@
-import { ecommercePlugin } from '@payloadcms/plugin-ecommerce'
+import { ecommercePlugin, EUR } from '@payloadcms/plugin-ecommerce'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
@@ -75,14 +75,7 @@ export const plugins: Plugin[] = [
     },
       currencies: {
       defaultCurrency: 'EUR',
-      supportedCurrencies: [
-        {
-          code: 'EUR',
-          decimals: 2,
-          label: 'Euro',
-          symbol: '€'
-        }
-      ]
+      supportedCurrencies: [EUR],
     },
     customers: {
       slug: 'users',

@@ -1,5 +1,5 @@
 import { AuthProvider } from '@/providers/Auth'
-import { EcommerceProvider } from '@payloadcms/plugin-ecommerce/client/react'
+import { EcommerceProvider, EUR } from '@payloadcms/plugin-ecommerce/client/react'
 import { stripeAdapterClient } from '@payloadcms/plugin-ecommerce/payments/stripe'
 import React from 'react'
 
@@ -19,32 +19,7 @@ export const Providers: React.FC<{
             enableVariants={true}
             currenciesConfig={{
               defaultCurrency: 'EUR',
-              supportedCurrencies: [
-                {
-                  code: 'EUR',
-                  decimals: 2,
-                  label: 'Euro',
-                  symbol: '€',
-                },
-/*                 {
-                  code: 'USD',
-                  decimals: 2,
-                  label: 'US Dollar',
-                  symbol: '$',
-                },
-                {
-                  code: 'GBP',
-                  decimals: 2,
-                  label: 'British Pound',
-                  symbol: '£',
-                },
-                {
-                  code: 'CHF',
-                  decimals: 2,
-                  label: 'Swiss Franc',
-                  symbol: 'CHF',
-                }, */
-              ],
+              supportedCurrencies: [EUR],
             }}
             api={{
               cartsFetchQuery: {
