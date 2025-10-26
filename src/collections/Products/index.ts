@@ -4,18 +4,18 @@ import { MediaBlock } from '@/blocks/MediaBlock/config'
 import { generatePreviewPath } from '@/utilities/generatePreviewPath'
 import { CollectionOverride } from '@payloadcms/plugin-ecommerce/types'
 import {
-    MetaDescriptionField,
-    MetaImageField,
-    MetaTitleField,
-    OverviewField,
-    PreviewField,
+  MetaDescriptionField,
+  MetaImageField,
+  MetaTitleField,
+  OverviewField,
+  PreviewField,
 } from '@payloadcms/plugin-seo/fields'
 import {
-    FixedToolbarFeature,
-    HeadingFeature,
-    HorizontalRuleFeature,
-    InlineToolbarFeature,
-    lexicalEditor,
+  FixedToolbarFeature,
+  HeadingFeature,
+  HorizontalRuleFeature,
+  InlineToolbarFeature,
+  lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 import { DefaultDocumentIDType, slugField, Where } from 'payload'
 
@@ -23,7 +23,7 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
   ...defaultCollection,
   admin: {
     ...defaultCollection?.admin,
-    defaultColumns: ['title', 'enableVariants', '_status', 'variants.variants'],
+    defaultColumns: ['title', 'enableVariants', 'isDigital', '_status', 'variants.variants'],
     livePreview: {
       url: ({ data, req }) =>
         generatePreviewPath({
@@ -51,6 +51,8 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
     priceInEUR: true,
     inventory: true,
     meta: true,
+    isDigital: true,
+    digitalFile: true,
   },
   fields: [
     { name: 'title', type: 'text', required: true },
@@ -98,7 +100,7 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
                   },
                   filterOptions: ({ data }) => {
                     if (data?.enableVariants && data?.variantTypes?.length) {
-                      const variantTypeIDs = data.variantTypes.map((item: any) => {
+                      const variantTypeIDs = data.variantTypes.map((item: string | { id: string | number }) => {
                         if (typeof item === 'object' && item?.id) {
                           return item.id
                         }
@@ -166,6 +168,53 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
             },
           ],
           label: 'Product Details',
+        },
+        // 🆕 NEU: Digital Downloads Tab
+        {
+          label: 'Digital Downloads',
+          fields: [
+            {
+              name: 'isDigital',
+              type: 'checkbox',
+              defaultValue: false,
+              label: 'Ist dies ein digitales Produkt?',
+              admin: {
+                description: 'Aktivieren Sie dies, wenn das Produkt eine herunterladbare Datei enthält',
+              },
+            },
+            {
+              name: 'digitalFile',
+              type: 'upload',
+              relationTo: 'media',
+              required: false,
+              admin: {
+                condition: (data) => data.isDigital === true,
+                description: 'Die herunterladbare Datei für Käufer (PDF, ZIP, etc.)',
+              },
+            },
+            {
+              name: 'downloadLimit',
+              type: 'number',
+              defaultValue: 3,
+              min: 1,
+              max: 100,
+              admin: {
+                condition: (data) => data.isDigital === true,
+                description: 'Maximale Anzahl der Downloads pro Kauf',
+              },
+            },
+            {
+              name: 'downloadExpiryDays',
+              type: 'number',
+              defaultValue: 30,
+              min: 1,
+              max: 365,
+              admin: {
+                condition: (data) => data.isDigital === true,
+                description: 'Tage bis der Download-Link abläuft (1-365)',
+              },
+            },
+          ],
         },
         {
           name: 'meta',

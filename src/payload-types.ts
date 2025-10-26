@@ -76,6 +76,7 @@ export interface Config {
     pages: Page;
     categories: Category;
     media: Media;
+    'download-tracking': DownloadTracking;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -108,6 +109,7 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    'download-tracking': DownloadTrackingSelect<false> | DownloadTrackingSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -294,6 +296,22 @@ export interface Product {
   priceInEUREnabled?: boolean | null;
   priceInEUR?: number | null;
   relatedProducts?: (string | Product)[] | null;
+  /**
+   * Aktivieren Sie dies, wenn das Produkt eine herunterladbare Datei enthält
+   */
+  isDigital?: boolean | null;
+  /**
+   * Die herunterladbare Datei für Käufer (PDF, ZIP, etc.)
+   */
+  digitalFile?: (string | null) | Media;
+  /**
+   * Maximale Anzahl der Downloads pro Kauf
+   */
+  downloadLimit?: number | null;
+  /**
+   * Tage bis der Download-Link abläuft (1-365)
+   */
+  downloadExpiryDays?: number | null;
   meta?: {
     title?: string | null;
     /**
@@ -1014,6 +1032,55 @@ export interface Address {
   createdAt: string;
 }
 /**
+ * Tracking für digitale Produkt-Downloads
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "download-tracking".
+ */
+export interface DownloadTracking {
+  id: string;
+  /**
+   * Die zugehörige Bestellung
+   */
+  order: string | Order;
+  /**
+   * Das digitale Produkt
+   */
+  product: string | Product;
+  /**
+   * Der Käufer (falls registriert)
+   */
+  user?: (string | null) | User;
+  /**
+   * Anzahl der bisherigen Downloads
+   */
+  downloadCount: number;
+  /**
+   * Maximale Anzahl erlaubter Downloads
+   */
+  maxDownloads: number;
+  /**
+   * Datum, bis zu dem Downloads möglich sind
+   */
+  expiresAt: string;
+  /**
+   * Zeitpunkt des letzten Downloads
+   */
+  lastDownloadAt?: string | null;
+  /**
+   * IP-Adressen aller Downloads (zur Missbrauchserkennung)
+   */
+  ipAddresses?:
+    | {
+        ip: string;
+        timestamp: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
@@ -1052,6 +1119,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'download-tracking';
+        value: string | DownloadTracking;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1366,6 +1437,28 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "download-tracking_select".
+ */
+export interface DownloadTrackingSelect<T extends boolean = true> {
+  order?: T;
+  product?: T;
+  user?: T;
+  downloadCount?: T;
+  maxDownloads?: T;
+  expiresAt?: T;
+  lastDownloadAt?: T;
+  ipAddresses?:
+    | T
+    | {
+        ip?: T;
+        timestamp?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "forms_select".
  */
 export interface FormsSelect<T extends boolean = true> {
@@ -1602,6 +1695,10 @@ export interface ProductsSelect<T extends boolean = true> {
   priceInEUREnabled?: T;
   priceInEUR?: T;
   relatedProducts?: T;
+  isDigital?: T;
+  digitalFile?: T;
+  downloadLimit?: T;
+  downloadExpiryDays?: T;
   meta?:
     | T
     | {

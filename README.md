@@ -17,28 +17,44 @@ This template is right for you if you are looking for an ecommerce project or sh
   - [x] Moved `<InitTheme />` to `<body>` - prevents hydration errors
   - [x] Moved favicon links to metadata - correctly uses the Next.js Metadata API
   - [x] Added the Icons property to metadata - structured and type-safe
+
 - [x] Change default currency to Euros
   - [x] Displays all prices in EUR (€)
   - [x] Has proper TypeScript support for EUR fields
   - [x] Builds successfully without errors
   - [x] Note: Ensure all prices are set in EUR in the admin panel for each product/variant
+
 - [x] Adapted the seeding script
   - [x] Changed all USD prices to EUR
   - [x] product-hat.ts
     - [x] enableVariants: true added
     - [x] variantTypes: variantTypes added (passed but not used)
     - [x] inventory: 0 added (same as for the T-shirt)
+
 - [x] Added brevo as email provider
+
+- [x] Enabled verified buyers to securely download digital products using presigned URLs
+  - [x] Products collection with digital fields
+  - [x] DownloadTracking collection
+  - [x] Order hook (automatically creates tracking)
+  - [x] API endpoint: /api/downloads/generate-url
+  - [x] API endpoint: /api/downloads/file
+  - [x] Frontend: Downloads Page
+  - [x] Frontend: DownloadsList component
+  
 
 ### To Do 📋
 
-- [ ] Enable verified buyers to securely download digital products using presigned URLs
-- [ ] Connect stripe or add polar.sh as payment option
+- [ ] Connect stripe sandbox to perform a test purchase
+
+### Future
+
+- [ ] Add polar.sh as payment option on top of the existing 
 - [ ] Connect uploadthing or other service as media storage
 - [ ] ...
 
 
-### Development
+## Development
 
 1. First [clone the repo](#clone)
 1. `cd my-project && cp .env.example .env` 
@@ -174,7 +190,7 @@ An order is created only once a transaction is successfully completed. This is a
 
 ## Currencies
 
-By default the original template ships with support only for USD however we have changed the supported currencies  to EURvia the [plugin configuration](https://payloadcms.com/docs/ecommerce/plugin#currencies). You will need to ensure that the supported currencies in Payload are also configured in your Payment platforms.
+By default the original template ships with support only for USD however we have changed the supported currencies to EUR via the [plugin configuration](https://payloadcms.com/docs/ecommerce/plugin#currencies). You will need to ensure that the supported currencies in Payload are also configured in your Payment platforms.
 
 ## Stripe
 
