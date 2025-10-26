@@ -7,7 +7,7 @@ This repo is an adaptation of the original template using bun as the default pac
 
 This template is right for you if you are looking for an ecommerce project or shop with Payload using Euros as the default currency.
 
-### Changes:
+## Changes:
 
 ### Done ✅
 
@@ -28,18 +28,21 @@ This template is right for you if you are looking for an ecommerce project or sh
     - [x] enableVariants: true added
     - [x] variantTypes: variantTypes added (passed but not used)
     - [x] inventory: 0 added (same as for the T-shirt)
-- [x] Add brevo as email provider
+- [x] Added brevo as email provider
 
 ### To Do 📋
-- [ ] Add polar.sh as payment option
-- [ ] Add uploadthing as media storage
+
+- [ ] Enable verified buyers to securely download digital products using presigned URLs
+- [ ] Connect stripe or add polar.sh as payment option
+- [ ] Connect uploadthing or other service as media storage
 - [ ] ...
 
 
 ### Development
 
-1. First [clone the repo](#clone) if you have not done so already
-1. `cd my-project && cp .env.example .env` to copy the example environment variables
+1. First [clone the repo](#clone)
+1. `cd my-project && cp .env.example .env` 
+    - Replace the example environment variables
 1. `bun install && bun dev` to install dependencies and start the dev server
 1. open `http://localhost:3000` to open the app in your browser
 
@@ -171,7 +174,7 @@ An order is created only once a transaction is successfully completed. This is a
 
 ## Currencies
 
-By default the template ships with support only for USD however you can change the supported currencies via the [plugin configuration](https://payloadcms.com/docs/ecommerce/plugin#currencies). You will need to ensure that the supported currencies in Payload are also configured in your Payment platforms.
+By default the original template ships with support only for USD however we have changed the supported currencies  to EURvia the [plugin configuration](https://payloadcms.com/docs/ecommerce/plugin#currencies). You will need to ensure that the supported currencies in Payload are also configured in your Payment platforms.
 
 ## Stripe
 
