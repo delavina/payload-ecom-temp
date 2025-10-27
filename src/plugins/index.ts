@@ -12,9 +12,9 @@ import { adminOnlyFieldAccess } from '@/access/adminOnlyFieldAccess'
 import { adminOrCustomerOwner } from '@/access/adminOrCustomerOwner'
 import { adminOrPublishedStatus } from '@/access/adminOrPublishedStatus'
 import { customerOnlyFieldAccess } from '@/access/customerOnlyFieldAccess'
-import { createDownloadTracking } from '@/collections/Orders/hooks/create_download_tracking_hook'; // 🆕 NEU
 import { ProductsCollection } from '@/collections/Products'
 import { checkDuplicateDigitalPurchase } from '@/collections/Transactions/hooks/checkDuplicateDigitalPurchase'
+import { handleTransactionSuccess } from '@/collections/Transactions/hooks/handleTransactionSuccess'
 import { Page, Product } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
 
@@ -94,18 +94,6 @@ export const plugins: Plugin[] = [
     products: {
       productsCollectionOverride: ProductsCollection,
     },
-    orders: {
-      ordersCollectionOverride: ({ defaultCollection }) => ({
-        ...defaultCollection,
-        hooks: {
-          ...defaultCollection.hooks,
-          afterChange: [
-            ...(defaultCollection.hooks?.afterChange || []),
-            createDownloadTracking,
-          ],
-        },
-      }),
-    },
         // Transactions Collection Override - Duplicate Check
     transactions: {
       transactionsCollectionOverride: ({ defaultCollection }) => ({
@@ -114,7 +102,11 @@ export const plugins: Plugin[] = [
           ...defaultCollection.hooks,
           beforeChange: [
             ...(defaultCollection.hooks?.beforeChange || []),
-            checkDuplicateDigitalPurchase,
+            checkDuplicateDigitalPurchase, // Verhindert Duplikate
+          ],
+          afterChange: [
+            ...(defaultCollection.hooks?.afterChange || []),
+            handleTransactionSuccess,       // Erstellt Order + Downloads
           ],
         },
       }),
