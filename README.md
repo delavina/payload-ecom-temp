@@ -34,18 +34,28 @@ This template is right for you if you are looking for an ecommerce project or sh
 - [x] Added brevo as email provider
 
 - [x] Enabled verified buyers to securely download digital products using presigned URLs
-  - [x] Products collection with digital fields
-  - [x] DownloadTracking collection
+  - [x] Products collection - Digital products with upload fields
+  - [x] DownloadTracking Collection - Logs all downloads
   - [x] Order hook (automatically creates tracking)
+- [x] API Endpoints:
   - [x] API endpoint: /api/downloads/generate-url
   - [x] API endpoint: /api/downloads/file
-  - [x] Frontend: Downloads Page
+- [x] Frontend Downloads Page - Displays all downloads with status
   - [x] Frontend: DownloadsList component
   
+- [x] Connected stripe sandbox to perform a test purchase
+- [x] Transaction Success Hook - Automatically creates tracking upon purchase
+
+- [x] Security Features:
+  - [x] Token-based URLs with 5-minute expiration
+  - [x] IP tracking of all downloads
+  - [x] Download limits per product
+  - [x] Time limit (30 days by default)
 
 ### To Do 📋
 
-- [ ] Connect stripe sandbox to perform a test purchase
+- [ ] Duplicate Check Hook - Prevent multiple purchases 
+
 
 ### Future
 

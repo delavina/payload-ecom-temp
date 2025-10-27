@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface DownloadItem {
   order: {
@@ -25,6 +25,12 @@ interface DownloadItem {
 export function DownloadsList({ items }: { items: DownloadItem[] }) {
   const [loading, setLoading] = useState<Record<string, boolean>>({})
   const [error, setError] = useState<string | null>(null)
+   const [mounted, setMounted] = useState(false)
+
+     // Verhindere Hydration-Fehler bei Datum-Formatierung
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleDownload = async (orderId: string, productId: string) => {
     const key = `${orderId}-${productId}`
@@ -68,6 +74,7 @@ export function DownloadsList({ items }: { items: DownloadItem[] }) {
   }
 
   const formatDate = (dateString: string) => {
+     if (!mounted) return dateString.split('T')[0] // Fallback für SSR
     const date = new Date(dateString)
     return new Intl.DateTimeFormat('de-DE', {
       day: '2-digit',
@@ -77,6 +84,7 @@ export function DownloadsList({ items }: { items: DownloadItem[] }) {
   }
 
   const formatDateTime = (dateString: string) => {
+    if (!mounted) return dateString.split('T')[0] // Fallback für SSR
     const date = new Date(dateString)
     return new Intl.DateTimeFormat('de-DE', {
       day: '2-digit',

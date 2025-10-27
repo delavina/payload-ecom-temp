@@ -128,11 +128,59 @@ export async function GET(req: NextRequest) {
 
     console.log('[File Download] Delivering file:', file.filename)
 
-    // 6. Datei ausliefern
-    // Wenn du UploadThing verwendest, hat die Datei eine direkte URL
+    // 6. Datei ausliefern - Proxy statt Redirect
     if (file.url) {
-      // Für UploadThing oder externe Storage: Redirect zur URL
-      return NextResponse.redirect(file.url)
+      console.log('[File Download] File URL:', file.url)
+      
+      // Baue absolute URL
+      let fileUrl = file.url
+      if (fileUrl.startsWith('/')) {
+        const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+        fileUrl = `${baseUrl}${fileUrl}`
+      }
+      
+      console.log('[File Download] Fetching file from:', fileUrl)
+
+      try {
+        // Hole Datei von Payload mit unseren Auth-Cookies
+        const fileResponse = await fetch(fileUrl, {
+          headers: {
+            // Kopiere alle Auth-Header vom ursprünglichen Request
+            cookie: req.headers.get('cookie') || '',
+          },
+        })
+
+        if (!fileResponse.ok) {
+          console.error('[File Download] Failed to fetch file:', fileResponse.status)
+          return NextResponse.json(
+            { error: 'Datei konnte nicht geladen werden' },
+            { status: 500 }
+          )
+        }
+
+        // Hole Datei-Body als Buffer
+        const arrayBuffer = await fileResponse.arrayBuffer()
+        const buffer = Buffer.from(arrayBuffer)
+
+        console.log('[File Download] ✅ Streaming file to user:', file.filename)
+
+        // Sende Datei direkt an User
+        return new NextResponse(buffer, {
+          status: 200,
+          headers: {
+            'Content-Type': file.mimeType || 'application/octet-stream',
+            'Content-Disposition': `attachment; filename="${encodeURIComponent(file.filename || 'download')}"`,
+            'Content-Length': buffer.length.toString(),
+            'Cache-Control': 'private, no-cache, no-store, must-revalidate',
+          },
+        })
+      } catch (fetchError) {
+        console.error('[File Download] Error fetching file:', fetchError)
+        return NextResponse.json(
+          { error: 'Fehler beim Laden der Datei' },
+          { status: 500 }
+        )
+      }
     }
 
     // Für lokalen Storage (falls du das verwendest)
