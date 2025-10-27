@@ -14,6 +14,7 @@ import { adminOrPublishedStatus } from '@/access/adminOrPublishedStatus'
 import { customerOnlyFieldAccess } from '@/access/customerOnlyFieldAccess'
 import { createDownloadTracking } from '@/collections/Orders/hooks/create_download_tracking_hook'; // 🆕 NEU
 import { ProductsCollection } from '@/collections/Products'
+import { checkDuplicateDigitalPurchase } from '@/collections/Transactions/hooks/checkDuplicateDigitalPurchase'
 import { Page, Product } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
 
@@ -101,6 +102,19 @@ export const plugins: Plugin[] = [
           afterChange: [
             ...(defaultCollection.hooks?.afterChange || []),
             createDownloadTracking,
+          ],
+        },
+      }),
+    },
+        // Transactions Collection Override - Duplicate Check
+    transactions: {
+      transactionsCollectionOverride: ({ defaultCollection }) => ({
+        ...defaultCollection,
+        hooks: {
+          ...defaultCollection.hooks,
+          beforeChange: [
+            ...(defaultCollection.hooks?.beforeChange || []),
+            checkDuplicateDigitalPurchase,
           ],
         },
       }),
