@@ -32,6 +32,12 @@ This template is right for you if you are looking for an ecommerce project or sh
     - [x] inventory: 0 added (same as for the T-shirt)
 
 - [x] Added brevo as email provider
+  - [x] Added test-email endpoint 
+    - [ ] change 'yourdomain.com' to your domain in the route.ts file
+    - [ ] Run the following command:
+  ```bash
+  curl http://localhost:3000/api/test-email
+  ```
 
 - [x] Enabled verified buyers to securely download digital products using presigned URLs
   - [x] Products collection - Digital products with upload fields
@@ -54,13 +60,14 @@ This template is right for you if you are looking for an ecommerce project or sh
 
 ### To Do 📋
 
-- [ ] Duplicate Check Hook - Prevent multiple purchases 
+- [ ] Duplicate Check Hook - Prevent multiple purchases of digital products ?!
 
 
 ### Future
 
-- [ ] Add polar.sh as payment option on top of the existing 
-- [ ] Connect uploadthing or other service as media storage
+- [ ] Consider polar.sh as payment option on top of the existing 
+- [ ] Connect uploadthing as media storage
+- [ ] Add storage bucket for downloadable files
 - [ ] ...
 
 
