@@ -60,14 +60,16 @@ This template is right for you if you are looking for an ecommerce project or sh
 
 ### To Do 📋
 
-- [ ] Duplicate Check Hook - Prevent multiple purchases of digital products ?!
+- [ ] Prevent multiple purchases of digital products
+  - [ ] Add "Already Purchased" badge + direct link to downloads (if already purchased)
+  - [ ] Disable quantity selector for digital products (quantity = 1 fixed)
 
 
 ### Future
 
 - [ ] Consider polar.sh as payment option on top of the existing 
 - [ ] Connect uploadthing as media storage
-- [ ] Add storage bucket for downloadable files
+- [ ] Add Object Storage for downloadable files
 - [ ] ...
 
 
