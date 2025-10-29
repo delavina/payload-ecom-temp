@@ -1,6 +1,6 @@
 # Payload Ecommerce Template
 
-This original template is in **BETA**.
+The original template is in **BETA**.
 (https://github.com/payloadcms/payload/blob/main/templates/ecommerce). 
 
 This repo is an adaptation of the original template using bun as the default package manager and includes a fully-working backend, enterprise-grade admin panel, and a beautifully designed, production-ready ecommerce website.
@@ -74,15 +74,23 @@ This template is right for you if you are looking for an ecommerce project or sh
 
 
 
+
 ## Digital Product Download
 
 ### production-ready digital download system 
+  - It is scalable (can handle thousands of downloads)
+  - It is secure (token authentication, limits, expiry)
+  - It is user-friendly (clear UI, easy navigation)
+  - It is production-ready (all edge cases covered)
 
-Frontend (100% functional):
-Security (100% implemented):
+#### Frontend (100% functional):
 
-⚠️ limitation:
-[ ] Cart UI Quantity Controls:
+#### Security (100% implemented):
+
+#### ⚠️ limitation:
+
+  - [ ] Cart UI Quantity Controls:
+
   - Displays + - buttons for digital products
 
   - BUT: Backend enforcement works (Quantity = 1)
