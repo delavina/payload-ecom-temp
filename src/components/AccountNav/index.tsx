@@ -52,6 +52,18 @@ export const AccountNav: React.FC<Props> = ({ className }) => {
             <Link href="/orders">Orders</Link>
           </Button>
         </li>
+
+                <li>
+          <Button
+            asChild
+            variant="link"
+            className={clsx('text-primary/50 hover:text-primary/100 hover:no-underline', {
+              'text-primary/100': pathname === '/downloads' || pathname.includes('/downloads'),
+            })}
+          >
+            <Link href="/downloads">Downloads</Link>
+          </Button>
+        </li>
       </ul>
 
       <hr className="w-full border-white/5" />

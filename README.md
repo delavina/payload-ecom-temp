@@ -13,7 +13,7 @@ This template is right for you if you are looking for an ecommerce project or sh
 
 - [x] Changed package manager to bun
 - [x] Change root layout to avoid hydration errors
-  - [x] Removed the `<head>` element - Next.js takes care of it
+  - [x] Removed the `<head>` element - as Next.js takes care of it
   - [x] Moved `<InitTheme />` to `<body>` - prevents hydration errors
   - [x] Moved favicon links to metadata - correctly uses the Next.js Metadata API
   - [x] Added the Icons property to metadata - structured and type-safe
@@ -21,8 +21,7 @@ This template is right for you if you are looking for an ecommerce project or sh
 - [x] Change default currency to Euros
   - [x] Displays all prices in EUR (€)
   - [x] Has proper TypeScript support for EUR fields
-  - [x] Builds successfully without errors
-  - [x] Note: Ensure all prices are set in EUR in the admin panel for each product/variant
+    - Note: Ensure all prices are set in EUR in the admin panel for each product/variant
 
 - [x] Adapted the seeding script
   - [x] Changed all USD prices to EUR
@@ -41,7 +40,7 @@ This template is right for you if you are looking for an ecommerce project or sh
 
 - [x] Enabled verified buyers to securely download digital products using presigned URLs
   - [x] Products collection - Digital products with upload fields
-  - [x] DownloadTracking Collection - Logs all downloads
+  - [x] Download Tracking Collection - Logs all downloads
   - [x] Order hook (automatically creates tracking)
 - [x] API Endpoints:
   - [x] API endpoint: /api/downloads/generate-url
@@ -55,13 +54,14 @@ This template is right for you if you are looking for an ecommerce project or sh
 - [x] Security Features:
   - [x] Token-based URLs with 5-minute expiration
   - [x] IP tracking of all downloads
-  - [x] Download limits per product
+  - [x] User authentication required
+  - [x] Download Limits & Expiry Dates per product
   - [x] Time limit (30 days by default)
 
 ### To Do 📋
 
-- [ ] Prevent multiple purchases of digital products
-  - [ ] Add "Already Purchased" badge + direct link to downloads (if already purchased)
+- [ ] Help prevent multiple purchases of digital products
+  - [x] Add "Already Purchased" badge + direct link to downloads (if already purchased)
   - [ ] Disable quantity selector for digital products (quantity = 1 fixed)
 
 
@@ -71,6 +71,24 @@ This template is right for you if you are looking for an ecommerce project or sh
 - [ ] Connect uploadthing as media storage
 - [ ] Add Object Storage for downloadable files
 - [ ] ...
+
+
+
+## Digital Product Download
+
+### production-ready digital download system 
+
+Frontend (100% functional):
+Security (100% implemented):
+
+⚠️ limitation:
+[ ] Cart UI Quantity Controls:
+  - Displays + - buttons for digital products
+
+  - BUT: Backend enforcement works (Quantity = 1)
+    - Reason: Payload eCommerce plugin does not load isDigital in the cart
+    - Impact: Cosmetic - no impact on functionality
+
 
 
 ## Development

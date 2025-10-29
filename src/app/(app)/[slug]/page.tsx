@@ -2,11 +2,13 @@ import type { Metadata } from 'next'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
+import type { Page } from '@/payload-types'
 import { generateMeta } from '@/utilities/generateMeta'
 import configPromise from '@payload-config'
 import { draftMode } from 'next/headers'
 import { getPayload } from 'payload'
 
+import { homeStaticData } from '@/endpoints/seed/home-static'
 import { notFound } from 'next/navigation'
 
 export async function generateStaticParams() {
@@ -43,14 +45,14 @@ export default async function Page({ params }: Args) {
   const { slug = 'home' } = await params
   const _url = '/' + slug // non used var!!
 
-  const page = await queryPageBySlug({ // using const instead of let to avoid reassignment
+ let page = await queryPageBySlug({ // after seeding: use const instead of let to avoid reassignment
     slug,
   })
 
   // Remove this code once your website is seeded
- /*  if (!page && slug === 'home') {
+  if (!page && slug === 'home') {
     page = homeStaticData() as Page
-  } */
+  }
 
   if (!page) {
     return notFound()

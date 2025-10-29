@@ -2,12 +2,12 @@
 
 import { Price } from '@/components/Price'
 import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
 } from '@/components/ui/sheet'
 import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
 import { ShoppingCart } from 'lucide-react'
@@ -66,6 +66,14 @@ export function CartModal() {
 
                   if (typeof product !== 'object' || !item || !product || !product.slug)
                     return <React.Fragment key={i} />
+
+                  // 🆕 Check if product is digital
+                  const isDigital = product.isDigital === true
+
+                  console.log('[CartModal] Product:', product.title)
+                  console.log('[CartModal] isDigital field:', product.isDigital)
+                  console.log('[CartModal] Full product:', product)
+
 
                   const metaImage =
                     product.meta?.image && typeof product.meta?.image === 'object'
@@ -139,6 +147,12 @@ export function CartModal() {
                                   .join(', ')}
                               </p>
                             ) : null}
+                            {/* 🆕 Digital Product Badge */}
+                            {isDigital && (
+                              <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                                Digital Product
+                              </p>
+                            )}
                           </div>
                         </Link>
                         <div className="flex h-16 flex-col justify-between">
@@ -148,6 +162,17 @@ export function CartModal() {
                               className="flex justify-end space-y-2 text-right text-sm"
                             />
                           )}
+                          {/* 🆕 Conditional Quantity Controls */}
+
+                        {isDigital ? (
+                          // Digital products: Show fixed quantity, no controls
+                          <div className="ml-auto flex h-9 flex-row items-center rounded-lg border border-neutral-200 dark:border-neutral-700 px-3 bg-neutral-50 dark:bg-neutral-800">
+                            <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                              Qty: {item.quantity}
+                            </p>
+                          </div>
+                        ) : (
+                          // Physical products: Show quantity controls
                           <div className="ml-auto flex h-9 flex-row items-center rounded-lg border">
                             <EditItemQuantityButton item={item} type="minus" />
                             <p className="w-6 text-center">
@@ -155,6 +180,7 @@ export function CartModal() {
                             </p>
                             <EditItemQuantityButton item={item} type="plus" />
                           </div>
+                        )}
                         </div>
                       </div>
                     </li>

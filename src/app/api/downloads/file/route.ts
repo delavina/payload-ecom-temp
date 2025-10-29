@@ -145,7 +145,6 @@ export async function GET(req: NextRequest) {
         // Hole Datei von Payload mit unseren Auth-Cookies
         const fileResponse = await fetch(fileUrl, {
           headers: {
-            // Kopiere alle Auth-Header vom ursprünglichen Request
             cookie: req.headers.get('cookie') || '',
           },
         })
@@ -164,14 +163,20 @@ export async function GET(req: NextRequest) {
 
         console.log('[File Download] ✅ Streaming file to user:', file.filename)
 
-        // Sende Datei direkt an User
+        // Force download for all file types (including images)
+        const mimeType = file.mimeType || 'application/octet-stream'
+        
         return new NextResponse(buffer, {
           status: 200,
           headers: {
-            'Content-Type': file.mimeType || 'application/octet-stream',
+            'Content-Type': mimeType,
             'Content-Disposition': `attachment; filename="${encodeURIComponent(file.filename || 'download')}"`,
-            'Content-Length': buffer.length.toString(),
-            'Cache-Control': 'private, no-cache, no-store, must-revalidate',
+            'Content-Length': buffer.byteLength.toString(),
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+            'X-Content-Type-Options': 'nosniff',
+            'X-Download-Options': 'noopen',
           },
         })
       } catch (fetchError) {
@@ -184,7 +189,6 @@ export async function GET(req: NextRequest) {
     }
 
     // Für lokalen Storage (falls du das verwendest)
-    // Hinweis: Payload speichert Dateien normalerweise in /media oder verwendet einen Storage Adapter
     return NextResponse.json(
       { error: 'Datei-URL nicht verfügbar. Bitte Storage-Adapter konfigurieren.' },
       { status: 500 }

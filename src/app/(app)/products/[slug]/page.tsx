@@ -65,6 +65,15 @@ export default async function ProductPage({ params }: Args) {
 
   if (!product) return notFound()
 
+// 🆕 Check if user already purchased this digital product
+/*   const headersList = await headers()
+  const payload = await getPayload({ config: configPromise })
+  const { user } = await payload.auth({ headers: headersList as Headers })
+  
+  const _alreadyPurchased = product.isDigital 
+    ? await checkIfProductPurchased(payload, user?.id, product.id)
+    : false */
+
   const gallery =
     product.gallery
       ?.filter((item) => typeof item.image === 'object')
