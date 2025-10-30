@@ -4,12 +4,12 @@ export const DownloadTracking: CollectionConfig = {
   slug: 'download-tracking',
   admin: {
     useAsTitle: 'id',
-    description: 'Tracking für digitale Produkt-Downloads',
+    description: 'Tracking for digital product downloads',
     defaultColumns: ['order', 'product', 'user', 'downloadCount', 'maxDownloads', 'expiresAt'],
     group: 'E-Commerce',
   },
   access: {
-    // Nur Admins können diese Collection direkt sehen
+    // Only admins can view this collection directly
     read: ({ req: { user } }) => {
       if (!user) return false
       return user.roles?.includes('admin') ?? false
@@ -27,7 +27,7 @@ export const DownloadTracking: CollectionConfig = {
       required: true,
       hasMany: false,
       admin: {
-        description: 'Die zugehörige Bestellung',
+        description: 'The related order',
       },
     },
     {
@@ -37,7 +37,7 @@ export const DownloadTracking: CollectionConfig = {
       required: true,
       hasMany: false,
       admin: {
-        description: 'Das digitale Produkt',
+        description: 'The digital product',
       },
     },
     {
@@ -47,7 +47,7 @@ export const DownloadTracking: CollectionConfig = {
       required: false,
       hasMany: false,
       admin: {
-        description: 'Der Käufer (falls registriert)',
+        description: 'The customer (if registered)',
       },
     },
     {
@@ -56,7 +56,7 @@ export const DownloadTracking: CollectionConfig = {
       defaultValue: 0,
       required: true,
       admin: {
-        description: 'Anzahl der bisherigen Downloads',
+        description: 'Number of downloads so far',
         readOnly: true,
       },
     },
@@ -65,7 +65,7 @@ export const DownloadTracking: CollectionConfig = {
       type: 'number',
       required: true,
       admin: {
-        description: 'Maximale Anzahl erlaubter Downloads',
+        description: 'Maximum number of allowed downloads',
       },
     },
     {
@@ -73,7 +73,7 @@ export const DownloadTracking: CollectionConfig = {
       type: 'date',
       required: true,
       admin: {
-        description: 'Datum, bis zu dem Downloads möglich sind',
+        description: 'Date, until downloads are possible',
         date: {
           pickerAppearance: 'dayAndTime',
         },
@@ -83,7 +83,7 @@ export const DownloadTracking: CollectionConfig = {
       name: 'lastDownloadAt',
       type: 'date',
       admin: {
-        description: 'Zeitpunkt des letzten Downloads',
+        description: 'Timestamp of the last download',
         readOnly: true,
         date: {
           pickerAppearance: 'dayAndTime',
@@ -94,7 +94,7 @@ export const DownloadTracking: CollectionConfig = {
       name: 'ipAddresses',
       type: 'array',
       admin: {
-        description: 'IP-Adressen aller Downloads (zur Missbrauchserkennung)',
+        description: 'IP addresses of all downloads (for abuse detection)',
         readOnly: true,
       },
       fields: [

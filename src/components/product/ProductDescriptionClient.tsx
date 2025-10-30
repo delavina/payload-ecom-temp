@@ -116,7 +116,7 @@ export function ProductDescriptionClient({
         ) : (
           <Suspense fallback={null}>
             {/* 🆕 Pass hideQuantity prop for digital products */}
-            <AddToCart product={product} hideQuantity={product.isDigital ?? false } />
+            <AddToCart product={product} />
           </Suspense>
         )}
       </div>

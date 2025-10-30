@@ -9,11 +9,10 @@ export const handleTransactionSuccess: CollectionAfterChangeHook<Transaction> = 
   doc,
   req,
   previousDoc,
-  operation,
 }) => {
   const { payload } = req
 
-  // Nur bei Status-Änderung zu "succeeded" reagieren
+  // Only react to status change to "succeeded"
   const wasSuccessful = previousDoc?.status !== 'succeeded' && doc.status === 'succeeded'
   
   if (!wasSuccessful) {
@@ -25,7 +24,7 @@ export const handleTransactionSuccess: CollectionAfterChangeHook<Transaction> = 
   try {
     let orderId: string | undefined
 
-    // 1. Hole oder erstelle Order
+    // 1. Get or create Order
     if (doc.order) {
       orderId = typeof doc.order === 'string' ? doc.order : doc.order.id
       
@@ -42,7 +41,7 @@ export const handleTransactionSuccess: CollectionAfterChangeHook<Transaction> = 
       
       console.log('[Transaction Success] Order status updated to completed')
     } else {
-      // Erstelle neue Order
+      // Create new Order
       console.log('[Transaction Success] Creating new order from transaction')
       
       const newOrder = await payload.create({
@@ -62,7 +61,7 @@ export const handleTransactionSuccess: CollectionAfterChangeHook<Transaction> = 
       
       console.log('[Transaction Success] Created order:', orderId)
 
-      // Verknüpfe Transaction mit Order
+      // Link Transaction with Order
       await payload.update({
         collection: 'transactions',
         id: doc.id,
@@ -72,7 +71,7 @@ export const handleTransactionSuccess: CollectionAfterChangeHook<Transaction> = 
       })
     }
 
-    // 2. Erstelle Download-Tracking für digitale Produkte
+    // 2. Create Download-Tracking for digital products
     console.log('[Transaction Success] Checking for digital products in order')
     
     for (const item of doc.items || []) {
@@ -86,20 +85,20 @@ export const handleTransactionSuccess: CollectionAfterChangeHook<Transaction> = 
           continue
         }
 
-        // Lade Produkt
+        // Load product
         const product = await payload.findByID({
           collection: 'products',
           id: productId,
         })
 
-        // Nur digitale Produkte
+        // Only digital products
         if (!product.isDigital || !product.digitalFile) {
           continue
         }
 
         console.log('[Transaction Success] Found digital product:', product.title)
 
-        // Prüfe ob bereits Tracking existiert
+        // Check if tracking already exists
         const existingTracking = await payload.find({
           collection: 'download-tracking',
           where: {
@@ -116,11 +115,11 @@ export const handleTransactionSuccess: CollectionAfterChangeHook<Transaction> = 
           continue
         }
 
-        // Berechne Ablaufdatum
+        // Calculate expiry date
         const expiryDate = new Date()
         expiryDate.setDate(expiryDate.getDate() + (product.downloadExpiryDays || 30))
 
-        // Erstelle Download-Tracking
+        // Create Download-Tracking
         await payload.create({
           collection: 'download-tracking',
           data: {

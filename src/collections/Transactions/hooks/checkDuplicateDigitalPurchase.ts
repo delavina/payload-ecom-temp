@@ -2,8 +2,8 @@ import type { Transaction } from '@/payload-types'
 import type { CollectionBeforeChangeHook } from 'payload'
 
 /**
- * Verhindert dass digitale Produkte mehrfach gekauft werden
- * Wird bei Transaction-Erstellung (vor Checkout) ausgeführt
+ * Prevents digital products from being purchased multiple times
+ * Runs when a Transaction is created (before checkout)
  */
 export const checkDuplicateDigitalPurchase: CollectionBeforeChangeHook<Transaction> = async ({
   data,
@@ -11,20 +11,20 @@ export const checkDuplicateDigitalPurchase: CollectionBeforeChangeHook<Transacti
   operation,
 }) => {
   const { payload, user } = req
-
-  // Nur bei neuen Transactions prüfen
+  
+// Only check for new Transactions
   if (operation !== 'create') {
     return data
   }
 
-  // Nur wenn User eingeloggt ist
+  // Only check if user is logged in
   if (!user || !data.items?.length) {
     return data
   }
 
   console.log('[Checkout Check] Checking for duplicate digital purchases for user:', user.id)
 
-  // Hole alle abgeschlossenen Orders des Users
+  // Get all completed orders of the user
   const completedOrders = await payload.find({
     collection: 'orders',
     where: {
@@ -39,7 +39,7 @@ export const checkDuplicateDigitalPurchase: CollectionBeforeChangeHook<Transacti
 
   console.log('[Checkout Check] User has', completedOrders.docs.length, 'completed orders')
 
-  // Sammle alle bereits gekauften digitalen Produkt-IDs mit Namen
+  // Collect all purchased digital product IDs with names
   const purchasedDigitalProducts = new Map<string, string>() // id -> title
   
   for (const order of completedOrders.docs) {
@@ -50,7 +50,7 @@ export const checkDuplicateDigitalPurchase: CollectionBeforeChangeHook<Transacti
 
       if (!productId) continue
 
-      // Lade Produkt um zu prüfen ob digital
+      // Load product to check if it is digital
       try {
         const product = await payload.findByID({
           collection: 'products',
@@ -68,7 +68,7 @@ export const checkDuplicateDigitalPurchase: CollectionBeforeChangeHook<Transacti
 
   console.log('[Checkout Check] User has purchased', purchasedDigitalProducts.size, 'digital products')
 
-  // Prüfe jedes Item in der neuen Transaction
+  // Check each item in the new transaction
   const duplicates: string[] = []
 
   for (const item of data.items) {

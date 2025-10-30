@@ -14,16 +14,16 @@ function verifyToken(
     const decoded = Buffer.from(token, 'base64url').toString()
     const [hash, timestamp] = decoded.split(':')
 
-    // Token-Alter prüfen (5 Minuten Gültigkeit)
+    // Token check (5 minutes validity)
     const tokenAge = Date.now() - parseInt(timestamp)
-    const maxAge = 5 * 60 * 1000 // 5 Minuten
+    const maxAge = 5 * 60 * 1000 // 5 minutes
     
     if (tokenAge > maxAge) {
       console.log('[File Download] Token expired - Age:', tokenAge, 'ms')
       return false
     }
 
-    // Hash verifizieren
+    // verify Hash
     const data = `${orderId}:${productId}:${userId}:${timestamp}`
     const expectedHash = crypto
       .createHmac('sha256', secret)
@@ -55,30 +55,30 @@ export async function GET(req: NextRequest) {
 
     if (!token || !orderId || !productId) {
       return NextResponse.json(
-        { error: 'Fehlende Parameter' },
+        { error: 'Missing parameters' },
         { status: 400 }
       )
     }
 
-    // 1. User authentifizieren
+    // 1. User authentication
     const { user } = await payload.auth({ headers: req.headers })
     
     if (!user) {
       return NextResponse.json(
-        { error: 'Nicht authentifiziert' },
+        { error: 'Not authenticated' },
         { status: 401 }
       )
     }
 
-    // 2. Token verifizieren
+    // 2. Token verification
     if (!verifyToken(token, orderId, productId, user.id)) {
       return NextResponse.json(
-        { error: 'Ungültiger oder abgelaufener Token' },
+        { error: 'Invalid or expired token' },
         { status: 403 }
       )
     }
 
-    // 3. Bestellung laden und verifizieren
+    // 3. Order loading and verification
     const order = await payload.findByID({
       collection: 'orders',
       id: orderId,
@@ -86,7 +86,7 @@ export async function GET(req: NextRequest) {
 
     if (!order) {
       return NextResponse.json(
-        { error: 'Bestellung nicht gefunden' },
+        { error: 'Order not found' },
         { status: 404 }
       )
     }
@@ -99,12 +99,12 @@ export async function GET(req: NextRequest) {
 
     if (orderCustomerId !== user.id && !isAdmin) {
       return NextResponse.json(
-        { error: 'Keine Berechtigung' },
+        { error: 'No permission' },
         { status: 403 }
       )
     }
 
-    // 4. Produkt und Datei laden
+    // 4. Product and file loading
     const product = await payload.findByID({
       collection: 'products',
       id: productId,
@@ -113,12 +113,12 @@ export async function GET(req: NextRequest) {
 
     if (!product.isDigital || !product.digitalFile) {
       return NextResponse.json(
-        { error: 'Keine digitale Datei verfügbar' },
+        { error: 'No digital file available' },
         { status: 404 }
       )
     }
 
-    // 5. Datei-Informationen extrahieren
+    // 5. File information extraction
     const file = typeof product.digitalFile === 'string' 
       ? await payload.findByID({
           collection: 'media',
@@ -128,11 +128,11 @@ export async function GET(req: NextRequest) {
 
     console.log('[File Download] Delivering file:', file.filename)
 
-    // 6. Datei ausliefern - Proxy statt Redirect
+    // 6. File delivery - Proxy instead of Redirect
     if (file.url) {
       console.log('[File Download] File URL:', file.url)
       
-      // Baue absolute URL
+      // Build absolute URL
       let fileUrl = file.url
       if (fileUrl.startsWith('/')) {
         const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
@@ -142,7 +142,7 @@ export async function GET(req: NextRequest) {
       console.log('[File Download] Fetching file from:', fileUrl)
 
       try {
-        // Hole Datei von Payload mit unseren Auth-Cookies
+        // Fetch file from Payload with our Auth-Cookies
         const fileResponse = await fetch(fileUrl, {
           headers: {
             cookie: req.headers.get('cookie') || '',
@@ -152,12 +152,12 @@ export async function GET(req: NextRequest) {
         if (!fileResponse.ok) {
           console.error('[File Download] Failed to fetch file:', fileResponse.status)
           return NextResponse.json(
-            { error: 'Datei konnte nicht geladen werden' },
+            { error: 'File could not be loaded' },
             { status: 500 }
           )
         }
 
-        // Hole Datei-Body als Buffer
+        // Fetch file body as Buffer
         const arrayBuffer = await fileResponse.arrayBuffer()
         const buffer = Buffer.from(arrayBuffer)
 
@@ -182,22 +182,22 @@ export async function GET(req: NextRequest) {
       } catch (fetchError) {
         console.error('[File Download] Error fetching file:', fetchError)
         return NextResponse.json(
-          { error: 'Fehler beim Laden der Datei' },
+          { error: 'Error loading file' },
           { status: 500 }
         )
       }
     }
 
-    // Für lokalen Storage (falls du das verwendest)
+    // For local storage (if used)
     return NextResponse.json(
-      { error: 'Datei-URL nicht verfügbar. Bitte Storage-Adapter konfigurieren.' },
+      { error: 'File URL not available. Please configure Storage Adapter.' },
       { status: 500 }
     )
 
   } catch (error) {
     console.error('[File Download] Error:', error)
     return NextResponse.json(
-      { error: 'Download fehlgeschlagen' },
+      { error: 'Download failed' },
       { status: 500 }
     )
   }

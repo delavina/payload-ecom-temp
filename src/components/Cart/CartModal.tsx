@@ -70,10 +70,6 @@ export function CartModal() {
                   // 🆕 Check if product is digital
                   const isDigital = product.isDigital === true
 
-                  console.log('[CartModal] Product:', product.title)
-                  console.log('[CartModal] isDigital field:', product.isDigital)
-                  console.log('[CartModal] Full product:', product)
-
 
                   const metaImage =
                     product.meta?.image && typeof product.meta?.image === 'object'
@@ -162,8 +158,8 @@ export function CartModal() {
                               className="flex justify-end space-y-2 text-right text-sm"
                             />
                           )}
-                          {/* 🆕 Conditional Quantity Controls */}
-
+                          
+                        {/* 🆕 Conditional Quantity Controls */}
                         {isDigital ? (
                           // Digital products: Show fixed quantity, no controls
                           <div className="ml-auto flex h-9 flex-row items-center rounded-lg border border-neutral-200 dark:border-neutral-700 px-3 bg-neutral-50 dark:bg-neutral-800">

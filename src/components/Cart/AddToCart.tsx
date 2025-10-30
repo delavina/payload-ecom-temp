@@ -1,6 +1,7 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import type { Product, Variant } from '@/payload-types'
+
 import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
 import clsx from 'clsx'
 import { useSearchParams } from 'next/navigation'
@@ -9,10 +10,9 @@ import { toast } from 'sonner'
 
 type Props = {
   product: Product
-  hideQuantity?: boolean // 🆕 Prop für digitale Produkte
 }
 
-export function AddToCart({ product, hideQuantity = false }: Props) {
+export function AddToCart({ product }: Props) {
   const { addItem, cart } = useCart()
   const searchParams = useSearchParams()
 
@@ -38,7 +38,7 @@ export function AddToCart({ product, hideQuantity = false }: Props) {
     (e: React.FormEvent<HTMLButtonElement>) => {
       e.preventDefault()
 
-      // 🆕 Für digitale Produkte: Prüfe ob bereits im Warenkorb
+      // For digital Products: Check if already in cart
       if (product.isDigital) {
         const alreadyInCart = cart?.items?.some((item) => {
           const productID = typeof item.product === 'object' ? item.product?.id : item.product
@@ -54,8 +54,9 @@ export function AddToCart({ product, hideQuantity = false }: Props) {
       addItem({
         product: product.id,
         variant: selectedVariant?.id ?? undefined,
-        quantity: product.isDigital ? 1 : undefined, // 🆕 Digitale Produkte: Quantity fix auf 1
-      }).then(() => {
+      }, 
+      product.isDigital ? 1 : undefined // Quantity as second argument
+    ).then(() => {
         toast.success('Item added to cart.')
       })
     },
@@ -79,7 +80,7 @@ export function AddToCart({ product, hideQuantity = false }: Props) {
       }
     })
 
-    // 🆕 Für digitale Produkte: Wenn bereits im Warenkorb, Button disablen
+    // 🆕 For digital Products: Disable button if already in cart
     if (existingItem && product.isDigital) {
       return true
     }

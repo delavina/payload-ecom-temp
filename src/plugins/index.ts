@@ -102,11 +102,11 @@ export const plugins: Plugin[] = [
           ...defaultCollection.hooks,
           beforeChange: [
             ...(defaultCollection.hooks?.beforeChange || []),
-            checkDuplicateDigitalPurchase, // Verhindert Duplikate
+            checkDuplicateDigitalPurchase, // Prevents duplicates
           ],
           afterChange: [
             ...(defaultCollection.hooks?.afterChange || []),
-            handleTransactionSuccess,       // Erstellt Order + Downloads
+            handleTransactionSuccess, // Creates Order + Downloads
           ],
         },
       }),

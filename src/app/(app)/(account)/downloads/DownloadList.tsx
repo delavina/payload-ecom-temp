@@ -27,7 +27,7 @@ export function DownloadsList({ items }: { items: DownloadItem[] }) {
   const [error, setError] = useState<string | null>(null)
    const [mounted, setMounted] = useState(false)
 
-     // Verhindere Hydration-Fehler bei Datum-Formatierung
+    // Prevent hydration errors with date formatting
   useEffect(() => {
     setMounted(true)
   }, [])
@@ -46,7 +46,7 @@ export function DownloadsList({ items }: { items: DownloadItem[] }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Wichtig für Cookie-basierte Auth
+        credentials: 'include', // Important for cookie-based auth
         body: JSON.stringify({ orderId, productId }),
       })
 
@@ -61,7 +61,7 @@ export function DownloadsList({ items }: { items: DownloadItem[] }) {
       // 2. Download starten
       window.location.href = data.downloadUrl
 
-      // 3. Seite neu laden um Zähler zu aktualisieren (nach kurzer Verzögerung)
+      // 3. Page reload to update counter (after short delay)
       setTimeout(() => {
         window.location.reload()
       }, 1500)
@@ -74,7 +74,7 @@ export function DownloadsList({ items }: { items: DownloadItem[] }) {
   }
 
   const formatDate = (dateString: string) => {
-     if (!mounted) return dateString.split('T')[0] // Fallback für SSR
+     if (!mounted) return dateString.split('T')[0] // Fallback for SSR
     const date = new Date(dateString)
     return new Intl.DateTimeFormat('de-DE', {
       day: '2-digit',
@@ -84,7 +84,7 @@ export function DownloadsList({ items }: { items: DownloadItem[] }) {
   }
 
   const formatDateTime = (dateString: string) => {
-    if (!mounted) return dateString.split('T')[0] // Fallback für SSR
+    if (!mounted) return dateString.split('T')[0] // Fallback for SSR
     const date = new Date(dateString)
     return new Intl.DateTimeFormat('de-DE', {
       day: '2-digit',
