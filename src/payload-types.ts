@@ -301,7 +301,7 @@ export interface Product {
    */
   isDigital?: boolean | null;
   /**
-   * Die herunterladbare Datei für Käufer (PDF, ZIP, etc.)
+   * Die herunterladbare Datei für Käufer (PDF, ZIP, etc.). Bei Produkten mit Varianten können Sie für jede Variante eine eigene Datei hochladen. Diese Datei dient als Fallback, falls eine Variante keine eigene Datei hat.
    */
   digitalFile?: (string | null) | Media;
   /**
@@ -901,6 +901,10 @@ export interface Variant {
   inventory?: number | null;
   priceInEUREnabled?: boolean | null;
   priceInEUR?: number | null;
+  /**
+   * Digital file for this variant (optional). Used when the product is digital and has different files per variant.
+   */
+  digitalFile?: string | Media | null;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -1032,7 +1036,7 @@ export interface Address {
   createdAt: string;
 }
 /**
- * Tracking für digitale Produkt-Downloads
+ * Tracking for digital product downloads
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "download-tracking".
@@ -1040,35 +1044,39 @@ export interface Address {
 export interface DownloadTracking {
   id: string;
   /**
-   * Die zugehörige Bestellung
+   * The related order
    */
   order: string | Order;
   /**
-   * Das digitale Produkt
+   * The digital product
    */
   product: string | Product;
   /**
-   * Der Käufer (falls registriert)
+   * The specific variant purchased (optional - only for products with variants)
+   */
+  variant?: (string | null) | Variant;
+  /**
+   * The customer (if registered)
    */
   user?: (string | null) | User;
   /**
-   * Anzahl der bisherigen Downloads
+   * Number of downloads so far
    */
   downloadCount: number;
   /**
-   * Maximale Anzahl erlaubter Downloads
+   * Maximum number of allowed downloads
    */
   maxDownloads: number;
   /**
-   * Datum, bis zu dem Downloads möglich sind
+   * Date, until downloads are possible
    */
   expiresAt: string;
   /**
-   * Zeitpunkt des letzten Downloads
+   * Timestamp of the last download
    */
   lastDownloadAt?: string | null;
   /**
-   * IP-Adressen aller Downloads (zur Missbrauchserkennung)
+   * IP addresses of all downloads (for abuse detection)
    */
   ipAddresses?:
     | {
@@ -1442,6 +1450,7 @@ export interface MediaSelect<T extends boolean = true> {
 export interface DownloadTrackingSelect<T extends boolean = true> {
   order?: T;
   product?: T;
+  variant?: T;
   user?: T;
   downloadCount?: T;
   maxDownloads?: T;

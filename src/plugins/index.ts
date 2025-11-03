@@ -13,6 +13,7 @@ import { adminOrCustomerOwner } from '@/access/adminOrCustomerOwner'
 import { adminOrPublishedStatus } from '@/access/adminOrPublishedStatus'
 import { customerOnlyFieldAccess } from '@/access/customerOnlyFieldAccess'
 import { ProductsCollection } from '@/collections/Products'
+import { VariantsCollection } from '@/collections/Variants'
 import { checkDuplicateDigitalPurchase } from '@/collections/Transactions/hooks/checkDuplicateDigitalPurchase'
 import { handleTransactionSuccess } from '@/collections/Transactions/hooks/handleTransactionSuccess'
 import { Page, Product } from '@/payload-types'
@@ -94,7 +95,10 @@ export const plugins: Plugin[] = [
     products: {
       productsCollectionOverride: ProductsCollection,
     },
-        // Transactions Collection Override - Duplicate Check
+    variants: {
+      variantsCollectionOverride: VariantsCollection,
+    },
+    // Transactions Collection Override - Duplicate Check
     transactions: {
       transactionsCollectionOverride: ({ defaultCollection }) => ({
         ...defaultCollection,

@@ -13,6 +13,10 @@ interface DownloadItem {
     title: string
     slug: string
   }
+  variant?: {
+    id: string
+    options: any[]
+  } | null
   tracking: {
     id: string
     downloadCount: number
@@ -32,22 +36,27 @@ export function DownloadsList({ items }: { items: DownloadItem[] }) {
     setMounted(true)
   }, [])
 
-  const handleDownload = async (orderId: string, productId: string) => {
-    const key = `${orderId}-${productId}`
-    setLoading(prev => ({ ...prev, [key]: true }))
+  const handleDownload = async (orderId: string, productId: string, variantId?: string) => {
+    const key = `${orderId}-${productId}${variantId ? `-${variantId}` : ''}`
+    setLoading((prev) => ({ ...prev, [key]: true }))
     setError(null)
 
     try {
-      console.log('[Download] Requesting URL for:', { orderId, productId })
+      console.log('[Download] Requesting URL for:', { orderId, productId, variantId })
 
-      // 1. Presigned URL anfordern
+      // 1. Presigned URL anfordern (mit variantId falls vorhanden)
+      const body: any = { orderId, productId }
+      if (variantId) {
+        body.variantId = variantId
+      }
+
       const response = await fetch('/api/downloads/generate-url', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include', // Important for cookie-based auth
-        body: JSON.stringify({ orderId, productId }),
+        body: JSON.stringify(body),
       })
 
       if (!response.ok) {
@@ -130,8 +139,8 @@ export function DownloadsList({ items }: { items: DownloadItem[] }) {
       )}
 
       <div className="grid gap-6">
-        {items.map(({ order, product, tracking }) => {
-          const key = `${order.id}-${product.id}`
+        {items.map(({ order, product, variant, tracking }) => {
+          const key = `${order.id}-${product.id}${variant ? `-${variant.id}` : ''}`
           const isExpired = new Date(tracking.expiresAt) < new Date()
           const downloadsRemaining = tracking.maxDownloads - tracking.downloadCount
           const canDownload = !isExpired && downloadsRemaining > 0
@@ -146,7 +155,24 @@ export function DownloadsList({ items }: { items: DownloadItem[] }) {
                   <h3 className="text-xl font-semibold text-gray-900 mb-2 truncate">
                     {product.title}
                   </h3>
-                  
+
+                  {variant && variant.options && variant.options.length > 0 && (
+                    <div className="mb-3 flex flex-wrap gap-2">
+                      {variant.options.map((option: any, idx: number) => {
+                        const optionLabel =
+                          typeof option === 'object' ? option.label || option.value : option
+                        return (
+                          <span
+                            key={idx}
+                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                          >
+                            {optionLabel}
+                          </span>
+                        )
+                      })}
+                    </div>
+                  )}
+
                   <p className="text-sm text-gray-600 mb-4">
                     Bestellt am: <span className="font-medium">{formatDate(order.createdAt)}</span>
                   </p>
@@ -241,7 +267,7 @@ export function DownloadsList({ items }: { items: DownloadItem[] }) {
                 </div>
 
                 <button
-                  onClick={() => handleDownload(order.id, product.id)}
+                  onClick={() => handleDownload(order.id, product.id, variant?.id)}
                   disabled={!canDownload || loading[key]}
                   className={`
                     flex-shrink-0 px-6 py-3 rounded-lg font-medium transition-all

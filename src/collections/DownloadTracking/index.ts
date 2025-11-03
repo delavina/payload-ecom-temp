@@ -5,7 +5,15 @@ export const DownloadTracking: CollectionConfig = {
   admin: {
     useAsTitle: 'id',
     description: 'Tracking for digital product downloads',
-    defaultColumns: ['order', 'product', 'user', 'downloadCount', 'maxDownloads', 'expiresAt'],
+    defaultColumns: [
+      'order',
+      'product',
+      'variant',
+      'user',
+      'downloadCount',
+      'maxDownloads',
+      'expiresAt',
+    ],
     group: 'E-Commerce',
   },
   access: {
@@ -38,6 +46,17 @@ export const DownloadTracking: CollectionConfig = {
       hasMany: false,
       admin: {
         description: 'The digital product',
+      },
+    },
+    {
+      name: 'variant',
+      type: 'relationship',
+      relationTo: 'variants',
+      required: false,
+      hasMany: false,
+      admin: {
+        description:
+          'The specific variant purchased (optional - only for products with variants)',
       },
     },
     {

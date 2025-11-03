@@ -73,11 +73,11 @@ export const handleTransactionSuccess: CollectionAfterChangeHook<Transaction> = 
 
     // 2. Create Download-Tracking for digital products
     console.log('[Transaction Success] Checking for digital products in order')
-    
+
     for (const item of doc.items || []) {
       try {
-        const productId = typeof item.product === 'string' 
-          ? item.product 
+        const productId = typeof item.product === 'string'
+          ? item.product
           : item.product?.id
 
         if (!productId) {
@@ -92,21 +92,65 @@ export const handleTransactionSuccess: CollectionAfterChangeHook<Transaction> = 
         })
 
         // Only digital products
-        if (!product.isDigital || !product.digitalFile) {
+        if (!product.isDigital) {
           continue
         }
 
         console.log('[Transaction Success] Found digital product:', product.title)
 
-        // Check if tracking already exists
+        // Check for variant
+        const variantId = typeof item.variant === 'string' ? item.variant : item.variant?.id
+        let digitalFile = product.digitalFile
+        let variantInfo = ''
+
+        // If product has variants, check if the variant has its own digital file
+        if (variantId) {
+          try {
+            const variant = await payload.findByID({
+              collection: 'variants',
+              id: variantId,
+            })
+
+            // Use variant's digital file if available, otherwise fall back to product's file
+            if (variant.digitalFile) {
+              digitalFile = variant.digitalFile
+              variantInfo = ` (Variant: ${variantId})`
+              console.log(
+                '[Transaction Success] Using variant-specific digital file for variant:',
+                variantId,
+              )
+            } else {
+              console.log(
+                '[Transaction Success] Variant has no digital file, using product fallback',
+              )
+            }
+          } catch (error) {
+            console.error('[Transaction Success] Error loading variant:', error)
+          }
+        }
+
+        // Skip if no digital file is available (neither on product nor variant)
+        if (!digitalFile) {
+          console.log('[Transaction Success] No digital file available, skipping')
+          continue
+        }
+
+        // Check if tracking already exists for this product + variant combination
+        const whereConditions: any = {
+          and: [
+            { order: { equals: orderId } },
+            { product: { equals: productId } },
+          ],
+        }
+
+        // Add variant condition if present
+        if (variantId) {
+          whereConditions.and.push({ variant: { equals: variantId } })
+        }
+
         const existingTracking = await payload.find({
           collection: 'download-tracking',
-          where: {
-            and: [
-              { order: { equals: orderId } },
-              { product: { equals: productId } },
-            ],
-          },
+          where: whereConditions,
           limit: 1,
         })
 
@@ -119,12 +163,13 @@ export const handleTransactionSuccess: CollectionAfterChangeHook<Transaction> = 
         const expiryDate = new Date()
         expiryDate.setDate(expiryDate.getDate() + (product.downloadExpiryDays || 30))
 
-        // Create Download-Tracking
+        // Create Download-Tracking with variant reference
         await payload.create({
           collection: 'download-tracking',
           data: {
             order: orderId,
             product: productId,
+            variant: variantId || undefined,
             user: doc.customer,
             downloadCount: 0,
             maxDownloads: product.downloadLimit || 3,
@@ -132,7 +177,10 @@ export const handleTransactionSuccess: CollectionAfterChangeHook<Transaction> = 
           },
         })
 
-        console.log('[Transaction Success] ✅ Created download tracking for:', product.title)
+        console.log(
+          '[Transaction Success] ✅ Created download tracking for:',
+          product.title + variantInfo,
+        )
       } catch (error) {
         console.error('[Transaction Success] Error processing item:', error)
       }

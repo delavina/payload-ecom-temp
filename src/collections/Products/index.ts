@@ -189,7 +189,10 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
               required: false,
               admin: {
                 condition: (data) => data.isDigital === true,
-                description: 'Die herunterladbare Datei für Käufer (PDF, ZIP, etc.)',
+                description:
+                  'Die herunterladbare Datei für Käufer (PDF, ZIP, etc.). ' +
+                  'Bei Produkten mit Varianten können Sie für jede Variante eine eigene Datei hochladen. ' +
+                  'Diese Datei dient als Fallback, falls eine Variante keine eigene Datei hat.',
               },
             },
             {

@@ -45,42 +45,83 @@ export default async function DownloadsPage() {
 
   for (const order of orders.docs) {
     for (const item of order.items || []) {
-      const product = typeof item.product === 'string'
-        ? await payload.findByID({
-            collection: 'products',
-            id: item.product,
+      const product =
+        typeof item.product === 'string'
+          ? await payload.findByID({
+              collection: 'products',
+              id: item.product,
+              depth: 1,
+            })
+          : item.product
+
+      // Skip if not a digital product
+      if (!product || !product.isDigital) {
+        continue
+      }
+
+      // Extract variant info if present
+      const variantId = typeof item.variant === 'string' ? item.variant : item.variant?.id
+      let variant = null
+      let hasDigitalFile = !!product.digitalFile
+
+      // Load variant details if present
+      if (variantId) {
+        try {
+          variant = await payload.findByID({
+            collection: 'variants',
+            id: variantId,
             depth: 1,
           })
-        : item.product
 
-      if (product && product.isDigital && product.digitalFile) {
-        // Download-Tracking laden
-        const tracking = await payload.find({
-          collection: 'download-tracking',
-          where: {
-            and: [
-              { order: { equals: order.id } },
-              { product: { equals: product.id } },
-            ],
-          },
-          limit: 1,
-        })
-
-        if (tracking.docs.length > 0) {
-          digitalProducts.push({
-            order: {
-              id: order.id,
-              createdAt: order.createdAt,
-              status: order.status || 'completed',
-            },
-            product: {
-              id: product.id,
-              title: product.title,
-              slug: product.slug,
-            },
-            tracking: tracking.docs[0],
-          })
+          // Check if variant has its own digital file
+          if (variant.digitalFile) {
+            hasDigitalFile = true
+          }
+        } catch (error) {
+          console.error('[Downloads Page] Error loading variant:', error)
         }
+      }
+
+      // Skip if no digital file available (neither on product nor variant)
+      if (!hasDigitalFile) {
+        continue
+      }
+
+      // Download-Tracking laden (mit Variante falls vorhanden)
+      const whereConditions: any = {
+        and: [{ order: { equals: order.id } }, { product: { equals: product.id } }],
+      }
+
+      if (variantId) {
+        whereConditions.and.push({ variant: { equals: variantId } })
+      }
+
+      const tracking = await payload.find({
+        collection: 'download-tracking',
+        where: whereConditions,
+        limit: 1,
+      })
+
+      if (tracking.docs.length > 0) {
+        digitalProducts.push({
+          order: {
+            id: order.id,
+            createdAt: order.createdAt,
+            status: order.status || 'completed',
+          },
+          product: {
+            id: product.id,
+            title: product.title,
+            slug: product.slug,
+          },
+          variant: variant
+            ? {
+                id: variant.id,
+                options: variant.options,
+              }
+            : null,
+          tracking: tracking.docs[0],
+        })
       }
     }
   }
