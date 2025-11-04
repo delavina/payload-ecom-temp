@@ -18,6 +18,7 @@ type Args = {
   params: Promise<{
     slug: string
   }>
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
@@ -59,9 +60,10 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   }
 }
 
-export default async function ProductPage({ params }: Args) {
+export default async function ProductPage({ params, searchParams }: Args) {
   const { slug } = await params
   const product = await queryProductBySlug({ slug })
+  const resolvedSearchParams = searchParams ? await searchParams : undefined
 
   if (!product) return notFound()
 
@@ -136,7 +138,7 @@ export default async function ProductPage({ params }: Args) {
           </div>
 
           <div className="basis-full lg:basis-1/2">
-            <ProductDescription product={product} />
+            <ProductDescription product={product} searchParams={resolvedSearchParams} />
           </div>
         </div>
       </div>
