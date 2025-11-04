@@ -56,7 +56,7 @@ export default async function DownloadsPage() {
                 depth: 1,
               })
             : item.product
-      } catch (error) {
+      } catch (_error) {
         console.warn('[Downloads Page] Product not found, skipping:', item.product)
         continue
       }
@@ -84,8 +84,8 @@ export default async function DownloadsPage() {
           if (variant.digitalFile) {
             hasDigitalFile = true
           }
-        } catch (error) {
-          console.error('[Downloads Page] Error loading variant:', error)
+        } catch (_error) {
+          console.error('[Downloads Page] Error loading variant:', _error)
         }
       }
 
