@@ -45,14 +45,21 @@ export default async function DownloadsPage() {
 
   for (const order of orders.docs) {
     for (const item of order.items || []) {
-      const product =
-        typeof item.product === 'string'
-          ? await payload.findByID({
-              collection: 'products',
-              id: item.product,
-              depth: 1,
-            })
-          : item.product
+      let product
+
+      try {
+        product =
+          typeof item.product === 'string'
+            ? await payload.findByID({
+                collection: 'products',
+                id: item.product,
+                depth: 1,
+              })
+            : item.product
+      } catch (error) {
+        console.warn('[Downloads Page] Product not found, skipping:', item.product)
+        continue
+      }
 
       // Skip if not a digital product
       if (!product || !product.isDigital) {
@@ -88,7 +95,9 @@ export default async function DownloadsPage() {
       }
 
       // Download-Tracking laden (mit Variante falls vorhanden)
-      const whereConditions: any = {
+      const whereConditions: {
+        and: Array<Record<string, { equals: string }>>
+      } = {
         and: [{ order: { equals: order.id } }, { product: { equals: product.id } }],
       }
 
