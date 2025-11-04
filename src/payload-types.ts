@@ -904,7 +904,7 @@ export interface Variant {
   /**
    * Digital file for this variant (optional). Used when the product is digital and has different files per variant.
    */
-  digitalFile?: string | Media | null;
+  digitalFile?: (string | Media) | null;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -1646,6 +1646,7 @@ export interface VariantsSelect<T extends boolean = true> {
   inventory?: T;
   priceInEUREnabled?: T;
   priceInEUR?: T;
+  digitalFile?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;

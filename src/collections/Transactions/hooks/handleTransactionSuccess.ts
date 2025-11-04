@@ -1,4 +1,4 @@
-import type { Transaction } from '@/payload-types'
+import type { Transaction } from '@/types'
 import type { CollectionAfterChangeHook } from 'payload'
 
 /**

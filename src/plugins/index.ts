@@ -13,10 +13,9 @@ import { adminOrCustomerOwner } from '@/access/adminOrCustomerOwner'
 import { adminOrPublishedStatus } from '@/access/adminOrPublishedStatus'
 import { customerOnlyFieldAccess } from '@/access/customerOnlyFieldAccess'
 import { ProductsCollection } from '@/collections/Products'
-import { VariantsCollection } from '@/collections/Variants'
 import { checkDuplicateDigitalPurchase } from '@/collections/Transactions/hooks/checkDuplicateDigitalPurchase'
 import { handleTransactionSuccess } from '@/collections/Transactions/hooks/handleTransactionSuccess'
-import { Page, Product } from '@/payload-types'
+import { Page, Product } from '@/types'
 import { getServerSideURL } from '@/utilities/getURL'
 
 const generateTitle: GenerateTitle<Product | Page> = ({ doc }) => {
@@ -94,9 +93,6 @@ export const plugins: Plugin[] = [
     },
     products: {
       productsCollectionOverride: ProductsCollection,
-    },
-    variants: {
-      variantsCollectionOverride: VariantsCollection,
     },
     // Transactions Collection Override - Duplicate Check
     transactions: {
