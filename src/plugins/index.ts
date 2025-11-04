@@ -17,6 +17,7 @@ import { checkDuplicateDigitalPurchase } from '@/collections/Transactions/hooks/
 import { handleTransactionSuccess } from '@/collections/Transactions/hooks/handleTransactionSuccess'
 import { Page, Product } from '@/types'
 import { getServerSideURL } from '@/utilities/getURL'
+import { variantsExtensionPlugin } from './variants-extension'
 
 const generateTitle: GenerateTitle<Product | Page> = ({ doc }) => {
   return doc?.title ? `${doc.title} | Payload Ecommerce Template` : 'Payload Ecommerce Template'
@@ -112,4 +113,7 @@ export const plugins: Plugin[] = [
       }),
     },
   }),
+  // Extend variants collection with digitalFile support
+  // IMPORTANT: Must be AFTER ecommercePlugin
+  variantsExtensionPlugin,
 ]

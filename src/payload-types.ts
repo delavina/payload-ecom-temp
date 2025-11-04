@@ -902,9 +902,9 @@ export interface Variant {
   priceInEUREnabled?: boolean | null;
   priceInEUR?: number | null;
   /**
-   * Digital file for this variant (optional). Used when the product is digital and has different files per variant.
+   * Digitale Datei für diese Variante (optional). Wird verwendet, wenn das Produkt digital ist und verschiedene Dateien pro Variante hat.
    */
-  digitalFile?: (string | Media) | null;
+  digitalFile?: (string | null) | Media;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
