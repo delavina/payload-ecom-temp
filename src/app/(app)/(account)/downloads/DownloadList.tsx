@@ -71,8 +71,41 @@ export function DownloadsList({ items }: { items: DownloadItem[] }) {
       const data = await response.json()
       console.log('[Download] Got URL, starting download...')
 
-      // 2. Download starten
-      window.location.href = data.downloadUrl
+      // 2. Download starten - Fetch the file and force download
+      const fileResponse = await fetch(data.downloadUrl, {
+        credentials: 'include',
+      })
+
+      if (!fileResponse.ok) {
+        throw new Error('Datei konnte nicht geladen werden')
+      }
+
+      // Create blob from response
+      const blob = await fileResponse.blob()
+
+      // Extract filename from Content-Disposition header or use product title
+      let filename = `${productId}.download`
+      const contentDisposition = fileResponse.headers.get('content-disposition')
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)
+        if (filenameMatch && filenameMatch[1]) {
+          filename = decodeURIComponent(filenameMatch[1].replace(/['"]/g, ''))
+        }
+      }
+
+      // Create download link and trigger download
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = filename
+      document.body.appendChild(link)
+      link.click()
+
+      // Cleanup
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+
+      console.log('[Download] ✅ Download started:', filename)
 
       // 3. Page reload to update counter (after short delay)
       setTimeout(() => {
