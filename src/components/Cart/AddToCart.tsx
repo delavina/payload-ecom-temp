@@ -39,14 +39,37 @@ export function AddToCart({ product }: Props) {
       e.preventDefault()
 
       // For digital Products: Check if already in cart
+      // For products with variants: check product + variant combination
       if (product.isDigital) {
+        const hasVariants = product.enableVariants && Boolean(product.variants?.docs?.length)
+
         const alreadyInCart = cart?.items?.some((item) => {
           const productID = typeof item.product === 'object' ? item.product?.id : item.product
-          return productID === product.id
+          const itemVariantID = item.variant
+            ? typeof item.variant === 'object'
+              ? item.variant?.id
+              : item.variant
+            : undefined
+
+          if (productID !== product.id) {
+            return false
+          }
+
+          // For products with variants: check if the exact variant is in cart
+          if (hasVariants) {
+            return itemVariantID === selectedVariant?.id
+          }
+
+          // For products without variants: product match is enough
+          return true
         })
 
         if (alreadyInCart) {
-          toast.error('This digital product is already in your cart.')
+          if (hasVariants) {
+            toast.error('This variant is already in your cart.')
+          } else {
+            toast.error('This digital product is already in your cart.')
+          }
           return
         }
       }
