@@ -133,7 +133,9 @@ export async function POST(req: NextRequest) {
     }
 
     // 6. Download-Tracking laden (mit Variante falls vorhanden)
-    const whereConditions: any = {
+    const whereConditions: {
+      and: Array<Record<string, { equals: string }>>
+    } = {
       and: [{ order: { equals: orderId } }, { product: { equals: productId } }],
     }
 

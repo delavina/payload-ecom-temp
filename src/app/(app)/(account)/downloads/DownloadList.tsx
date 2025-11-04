@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import type { VariantOption } from '@/types'
 
 interface DownloadItem {
   order: {
@@ -15,7 +16,7 @@ interface DownloadItem {
   }
   variant?: {
     id: string
-    options: any[]
+    options: Array<VariantOption | string>
   } | null
   tracking: {
     id: string
@@ -45,7 +46,10 @@ export function DownloadsList({ items }: { items: DownloadItem[] }) {
       console.log('[Download] Requesting URL for:', { orderId, productId, variantId })
 
       // 1. Presigned URL anfordern (mit variantId falls vorhanden)
-      const body: any = { orderId, productId }
+      const body: { orderId: string; productId: string; variantId?: string } = {
+        orderId,
+        productId
+      }
       if (variantId) {
         body.variantId = variantId
       }
@@ -158,7 +162,7 @@ export function DownloadsList({ items }: { items: DownloadItem[] }) {
 
                   {variant && variant.options && variant.options.length > 0 && (
                     <div className="mb-3 flex flex-wrap gap-2">
-                      {variant.options.map((option: any, idx: number) => {
+                      {variant.options.map((option: VariantOption | string, idx: number) => {
                         const optionLabel =
                           typeof option === 'object' ? option.label || option.value : option
                         return (
