@@ -59,7 +59,7 @@ export const checkDuplicateDigitalPurchase: CollectionBeforeChangeHook<Transacti
         })
 
         if (product.isDigital) {
-          const hasVariants = product.enableVariants && Boolean(product.variants?.docs?.length)
+          const hasVariants = Boolean(product.enableVariants && product.variants?.docs?.length)
           const variantId = typeof item.variant === 'string' ? item.variant : item.variant?.id
 
           if (hasVariants && variantId) {
@@ -98,7 +98,7 @@ export const checkDuplicateDigitalPurchase: CollectionBeforeChangeHook<Transacti
         collection: 'products',
         id: productId,
       })
-      hasVariants = product.enableVariants && Boolean(product.variants?.docs?.length)
+      hasVariants = Boolean(product.enableVariants && product.variants?.docs?.length)
     } catch (error) {
       console.error('[Checkout Check] Error loading product for variant check:', productId)
       continue
