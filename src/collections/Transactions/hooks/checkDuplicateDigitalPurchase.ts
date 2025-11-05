@@ -73,8 +73,8 @@ export const checkDuplicateDigitalPurchase: CollectionBeforeChangeHook<Transacti
             console.log('[Checkout Check] Found purchased product:', productId)
           }
         }
-      } catch (error) {
-        console.error('[Checkout Check] Error loading product:', productId, error)
+      } catch (_error) {
+        console.error('[Checkout Check] Error loading product:', productId, _error)
       }
     }
   }
@@ -99,7 +99,7 @@ export const checkDuplicateDigitalPurchase: CollectionBeforeChangeHook<Transacti
         id: productId,
       })
       hasVariants = Boolean(product.enableVariants && product.variants?.docs?.length)
-    } catch (error) {
+    } catch (_error) {
       console.error('[Checkout Check] Error loading product for variant check:', productId)
       continue
     }
