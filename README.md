@@ -11,6 +11,7 @@ This template is right for you if you are looking for an ecommerce project or sh
 
 ### Done ✅
 
+#### Package Manager & Layout
 - [x] Changed package manager to bun
 - [x] Change root layout to avoid hydration errors
   - [x] Removed the `<head>` element - as Next.js takes care of it
@@ -18,11 +19,13 @@ This template is right for you if you are looking for an ecommerce project or sh
   - [x] Moved favicon links to metadata - correctly uses the Next.js Metadata API
   - [x] Added the Icons property to metadata - structured and type-safe
 
+#### Currency
 - [x] Change default currency to Euros
   - [x] Displays all prices in EUR (€)
   - [x] Has proper TypeScript support for EUR fields
     - Note: Ensure all prices are set in EUR in the admin panel for each product/variant
 
+#### Seeding Script
 - [x] Adapted the seeding script
   - [x] Changed all USD prices to EUR
   - [x] product-hat.ts
@@ -30,14 +33,18 @@ This template is right for you if you are looking for an ecommerce project or sh
     - [x] variantTypes: variantTypes added (passed but not used)
     - [x] inventory: 0 added (same as for the T-shirt)
 
+#### Email Provider (Brevo)
 - [x] Added brevo as email provider
   - [x] Added test-email endpoint 
+  - [ ] Configure your Brevo API key in the environment variables
+  - [ ] Update the sender email address in the route.ts file
     - [ ] change 'yourdomain.com' to your domain in the route.ts file
-    - [ ] Run the following command:
+    - [ ] To test run the following command:
   ```bash
   curl http://localhost:3000/api/test-email
   ```
 
+#### Digital Downloads
 - [x] Enabled verified buyers to securely download digital products using presigned URLs
   - [x] Products collection - Digital products with upload fields
   - [x] Download Tracking Collection - Logs all downloads
@@ -48,15 +55,25 @@ This template is right for you if you are looking for an ecommerce project or sh
 - [x] Frontend Downloads Page - Displays all downloads with status
   - [x] Frontend: DownloadsList component
   
+#### Stripe Integration
 - [x] Connected stripe sandbox to perform a test purchase
 - [x] Transaction Success Hook - Automatically creates tracking upon purchase
 
+#### Security Features
 - [x] Security Features:
   - [x] Token-based URLs with 5-minute expiration
   - [x] IP tracking of all downloads
   - [x] User authentication required
   - [x] Download Limits & Expiry Dates per product
   - [x] Time limit (30 days by default)
+
+#### Variant Handling
+- [x] Added variant handling for digital products
+  - [x] Different versions of the same digital product can be purchased separately
+  - [x] Only the purchased version displays "Already Purchased"
+  - [x] Multiple versions can be added to the cart simultaneously
+  - [x] Each version has its own download with separate tracking
+
 
 ### To Do 📋
 
@@ -68,14 +85,13 @@ This template is right for you if you are looking for an ecommerce project or sh
 ### Future
 
 - [ ] Consider polar.sh as payment option on top of the existing 
-- [ ] Connect uploadthing as media storage
-- [ ] Add Object Storage for downloadable files
+- [ ] Add Object Storage for media & downloadable files
 - [ ] ...
 
 
 
 
-## Digital Product Download
+## Digital Product Download (Notes)
 
 ### production-ready digital download system 
   - It is scalable (can handle thousands of downloads)
@@ -84,15 +100,11 @@ This template is right for you if you are looking for an ecommerce project or sh
   - It is production-ready (all edge cases covered)
 
 #### Frontend (100% functional):
-
 #### Security (100% implemented):
 
 #### ⚠️ limitation:
-
   - [ ] Cart UI Quantity Controls:
-
   - Displays + - buttons for digital products
-
   - BUT: Backend enforcement works (Quantity = 1)
     - Reason: Payload eCommerce plugin does not load isDigital in the cart
     - Impact: Cosmetic - no impact on functionality
