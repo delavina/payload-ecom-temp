@@ -124,8 +124,8 @@ export const handleTransactionSuccess: CollectionAfterChangeHook<Transaction> = 
                 '[Transaction Success] Variant has no digital file, using product fallback',
               )
             }
-          } catch (error) {
-            console.error('[Transaction Success] Error loading variant:', error)
+          } catch (_error) {
+            console.error('[Transaction Success] Error loading variant:', _error)
           }
         }
 
@@ -136,7 +136,9 @@ export const handleTransactionSuccess: CollectionAfterChangeHook<Transaction> = 
         }
 
         // Check if tracking already exists for this product + variant combination
-        const whereConditions: any = {
+        const whereConditions: {
+          and: Array<Record<string, { equals: string }>>
+        } = {
           and: [
             { order: { equals: orderId } },
             { product: { equals: productId } },
@@ -181,15 +183,15 @@ export const handleTransactionSuccess: CollectionAfterChangeHook<Transaction> = 
           '[Transaction Success] ✅ Created download tracking for:',
           product.title + variantInfo,
         )
-      } catch (error) {
-        console.error('[Transaction Success] Error processing item:', error)
+      } catch (_error) {
+        console.error('[Transaction Success] Error processing item:', _error)
       }
     }
 
     console.log('[Transaction Success] ✅ Processing complete')
     return doc
-  } catch (error) {
-    console.error('[Transaction Success] Error:', error)
+  } catch (_error) {
+    console.error('[Transaction Success] Error:', _error)
     return doc
   }
 }
