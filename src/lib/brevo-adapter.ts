@@ -120,7 +120,7 @@ function mapFromAddress(
   }
   
   if (typeof address === 'string') {
-    const match = address.match(/^(.+?)\\s*<(.+?)>$/)
+    const match = address.match(/^(.+?)\s*<(.+?)>$/)
     if (match) {
       return { name: match[1].trim(), email: match[2].trim() }
     }
