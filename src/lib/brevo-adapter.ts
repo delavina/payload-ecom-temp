@@ -47,6 +47,17 @@ export const brevoAdapter = (args: BrevoAdapterArgs): BrevoAdapter => {
         defaultFromName,
       )
 
+      // Validate API key and sender email before calling Brevo to provide clearer errors
+      if (!apiKey || typeof apiKey !== 'string' || apiKey.trim() === '') {
+        throw new APIError('Brevo API key missing or invalid', 400)
+      }
+
+      const senderEmail = sendEmailOptions?.sender?.email
+      const simpleEmailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!senderEmail || !simpleEmailRe.test(senderEmail)) {
+        throw new APIError(`Brevo sender email missing or invalid: ${String(senderEmail)}`, 400)
+      }
+
       const res = await fetch('https://api.brevo.com/v3/smtp/email', {
         method: 'POST',
         headers: {
@@ -81,10 +92,26 @@ function mapPayloadEmailToBrevoEmail(
     sender: mapFromAddress(message.from, defaultFromName, defaultFromAddress),
     to: mapAddresses(message.to) || [],
     subject: message.subject ?? '',
-    bcc: mapAddresses(message.bcc) || [],
-    cc: mapAddresses(message.cc) || [],
-    replyTo: mapFromAddress(message.replyTo, defaultFromName, defaultFromAddress),
-    attachment: mapAttachments(message.attachments),
+  }
+
+  // Only include optional fields if they have values
+  const bcc = mapAddresses(message.bcc)
+  if (bcc && bcc.length > 0) {
+    emailOptions.bcc = bcc
+  }
+
+  const cc = mapAddresses(message.cc)
+  if (cc && cc.length > 0) {
+    emailOptions.cc = cc
+  }
+
+  if (message.replyTo) {
+    emailOptions.replyTo = mapFromAddress(message.replyTo, defaultFromName, defaultFromAddress)
+  }
+
+  const attachments = mapAttachments(message.attachments)
+  if (attachments && attachments.length > 0) {
+    emailOptions.attachment = attachments
   }
 
   if (message.templateId) {
@@ -103,7 +130,11 @@ function mapPayloadEmailToBrevoEmail(
 }
 
 function mapFromAddress(
-  address: string | { name?: string; address: string } | Array<string | { name?: string; address: string }> | undefined,  
+  address:
+    | string
+    | { name?: string; address: string }
+    | Array<string | { name?: string; address: string }>
+    | undefined,
   defaultFromName: string,
   defaultFromAddress: string,
 ): BrevoSendEmailOptions['sender'] {
@@ -132,7 +163,11 @@ function mapFromAddress(
 
 function mapAddresses(
   // addresses: SendEmailOptions['to'],
-    addresses: string | { name?: string; address: string } | Array<string | { name?: string; address: string }> | undefined,
+    addresses: 
+    | string 
+    | { name?: string; address: string } 
+    | Array<string | { name?: string; address: string }> 
+    | undefined,
 ): BrevoSendEmailOptions['to'] | undefined {
   if (!addresses) return undefined
 
